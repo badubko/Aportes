@@ -10,6 +10,8 @@ declare -a NCM_Lineas
 declare -a VAL_COL
 
 LISTADO_DATOS="../Datos/Libro2_V1.0.csv"
+TABLE_NAME_1="T_VOLS1"
+TABLE_NAME_2="T_VOLS2"
 
 if [ ! -f  "${LISTADO_DATOS}" ]
 then
@@ -66,7 +68,13 @@ echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
 	#let NCM_linecount++
 #done
 
-read kakita  < ${LISTADO_DATOS}
+
+
+#Insert into city
+ #(`city_id`,`city`,`country_id`,`last_update`)
+#Values
+#('261','Kanchrapara','44','2006-02-15 04:45:25.000')
+
 
 OLDIFS=$IFS
 IFS=,
@@ -74,7 +82,10 @@ IFS=,
 
 while read VAL_COL[0] VAL_COL[1] VAL_COL[2] VAL_COL[3] kakita #  VAL_COL[4]
 do
-	echo ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]}
+	printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
+	printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
+	printf "%s\n" "Values"
+	printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]}
 # 	printf "\n"
 done < ${LISTADO_DATOS}
 
