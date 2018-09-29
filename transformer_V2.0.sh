@@ -56,28 +56,27 @@ let NCM_linecount=0
 
 echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
 
-IFS=,
-while [ ${NCM_linecount} -le ${NCM_TOT_LIN} ]
-do
-	read VAL_COL[0] VAL_COL[1] VAL_COL[2] VAL_COL[3] kakita <<<${NCM_Lineas[${NCM_linecount}]}
-	
-#	echo ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]}
-	echo ${VAL_COL[0]} 
-	printf "\n"
-	let NCM_linecount++
-done
-
-#INPUT=data.cvs
-#OLDIFS=$IFS
 #IFS=,
-#[ ! -f $INPUT ] && { echo "$INPUT file not found"; exit 99; }
-#while read flname dob ssn tel status
+#while [ ${NCM_linecount} -le ${NCM_TOT_LIN} ]
 #do
-	#echo "Name : $flname"
-	#echo "DOB : $dob"
-	#echo "SSN : $ssn"
-	#echo "Telephone : $tel"
-	#echo "Status : $status"
-#done < $INPUT
-#IFS=$OLDIFS
+##	read VAL_COL[0] VAL_COL[1] VAL_COL[2] VAL_COL[3] <<<${NCM_Lineas[${NCM_linecount}]}
+	#read VAL_COL[0]  <<<${NCM_Lineas[${NCM_linecount}]}
+	#echo ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]}
+	#printf "\n"
+	#let NCM_linecount++
+#done
+
+read kakita  < ${LISTADO_DATOS}
+
+OLDIFS=$IFS
+IFS=,
+
+
+while read VAL_COL[0] VAL_COL[1] VAL_COL[2] VAL_COL[3] kakita #  VAL_COL[4]
+do
+	echo ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]}
+# 	printf "\n"
+done < ${LISTADO_DATOS}
+
+IFS=$OLDIFS
 	
