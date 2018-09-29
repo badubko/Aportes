@@ -80,13 +80,14 @@ OLDIFS=$IFS
 IFS=,
 
 
-while  read VAL_COL[0] VAL_COL[1] VAL_COL[2] VAL_COL[3] kakita #  VAL_COL[4]
-# while IFS=','  read -ra VAL_COL
+# while  read VAL_COL[0] VAL_COL[1] VAL_COL[2] VAL_COL[3] kakita #  VAL_COL[4]
+while IFS=','  read -ra VAL_COL
 do
 	printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
-	printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
+	printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}\
+	${NOMBRE_COL[9]}
 	printf "%s\n" "Values"
-	printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]}
+	printf "('%s','%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]} ${VAL_COL[9]}
  	printf ";\n"
 done < ${LISTADO_DATOS}
 
