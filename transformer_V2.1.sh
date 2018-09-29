@@ -23,7 +23,7 @@ then
 	return
 fi
 
-/bin/grep -q -e "$PATRON_CUIL" <<< ${VAL_COL[21]^^}  # Hay un CUIL y de el tomaremos el DNI
+/bin/grep -q -e "${PATRON_CUIL}" <<< ${VAL_COL[21]^^}  # Hay un CUIL y de el tomaremos el DNI
 if [ $? = 0 ]
 then
 #	echo "Obtener DNI y guardar CUIL"
@@ -39,7 +39,7 @@ declare -a NOMBRE_COL
 declare -a NCM_Lineas 
 declare -a VAL_COL
 
-PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{2\}"
+PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
 
 LISTADO_DATOS="../Datos/Libro2_V1.0.csv"
 TABLE_NAME_1="T_VOLS1"
@@ -116,11 +116,11 @@ IFS=,
 while IFS=','  read -ra VAL_COL
 do
 	procesar_dni_cuil
-	if [ ${HAY_DNI} = "TRUE"]
+	if [ ${HAY_DNI} = "TRUE" ]
 	then
 		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "DNI" ${HAY_DNI} "CUIL" ${HAY_CUIL}
 	else
-		printf "%s %s %s \n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} "-->SIN DNI"
+		printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN DNI"
 	fi
 	
 	#if [ ${HAY_DNI} = "TRUE"]
