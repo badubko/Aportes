@@ -59,10 +59,10 @@ echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
 IFS=,
 while [ ${NCM_linecount} -le ${NCM_TOT_LIN} ]
 do
-	read VAL_COL[0] VAL_COL[1] VAL_COL[2] VAL_COL[3] kakita <<<${NCM_Lineas[${NCM_linecount}]}
+	read -ra VAL_COL <<<${NCM_Lineas[${NCM_linecount}]}
 	
-#	echo ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]}
-	echo ${VAL_COL[0]} 
+	echo ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]}
+#	echo ${VAL_COL[0]} 
 	printf "\n"
 	let NCM_linecount++
 done
