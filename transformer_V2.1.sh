@@ -14,15 +14,23 @@ then
 	return
 fi
 
-grep -q -e "^ *DNI" <<< ${VAL_COL[21]^^}    # EL patron DNI (may o min) precedido de blancos
+/bin/grep -q -e "^ *DNI" <<< ${VAL_COL[21]^^}    # EL patron DNI (may o min) precedido de blancos
 if [ $? = 0 ]
 then
-	echo "Remover DNI y tomar los digitos"
+#	echo "Remover DNI y tomar los digitos"
 	HAY_DNI="TRUE"
+	HAY_CUIL="FALSE"
 	return
 fi
 
-
+/bin/grep -q -e "$PATRON_CUIL" <<< ${VAL_COL[21]^^}  # Hay un CUIL y de el tomaremos el DNI
+if [ $? = 0 ]
+then
+#	echo "Obtener DNI y guardar CUIL"
+	HAY_DNI="TRUE"
+	HAY_CUIL="TRUE"
+	return
+fi
 	
 
 }
@@ -30,6 +38,8 @@ fi
 declare -a NOMBRE_COL
 declare -a NCM_Lineas 
 declare -a VAL_COL
+
+PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{2\}"
 
 LISTADO_DATOS="../Datos/Libro2_V1.0.csv"
 TABLE_NAME_1="T_VOLS1"
@@ -108,15 +118,22 @@ do
 	procesar_dni_cuil
 	if [ ${HAY_DNI} = "TRUE"]
 	then
-		printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
-		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}\
-		${NOMBRE_COL[9]}
-		printf "%s\n" "Values"
-		printf "('%s','%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]} ${VAL_COL[9]}
-		printf ";\n"
- 	else
+		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "DNI" ${HAY_DNI} "CUIL" ${HAY_CUIL}
+	else
 		printf "%s %s %s \n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} "-->SIN DNI"
 	fi
+	
+	#if [ ${HAY_DNI} = "TRUE"]
+	#then
+		#printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
+		#printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}\
+		#${NOMBRE_COL[9]}
+		#printf "%s\n" "Values"
+		#printf "('%s','%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]} ${VAL_COL[9]}
+		#printf ";\n"
+ 	#else
+		#printf "%s %s %s \n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} "-->SIN DNI"
+	#fi
 done < ${LISTADO_DATOS}
 
 IFS=$OLDIFS
