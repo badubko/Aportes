@@ -10,7 +10,10 @@ HAY_DNI="FALSE"
 
 if [ ${#VAL_COL[21]} = 0 ]  # No hay cargado DNI ni CUIL
 then
+	DNI=""
+	CUIL="N/D"
 	HAY_DNI="FALSE"
+	HAY_CUIL="FALSE"
 	return
 fi
 
@@ -23,6 +26,7 @@ then
 	DNI=${VAL_COL[21]^^}
 	DNI=${DNI#DNI }
 	DNI=${DNI//./}
+	CUIL="N/D"
 	return
 fi
 
@@ -36,6 +40,8 @@ then
 	CUIL=$( sed -r 's/.*([0-9]{2}-)([0-9]{8}-)([0-9]{1}) .*/\1\2\3/' <<<${VAL_COL[21]} ) 
 	return
 else
+	DNI=""
+	CUIL="N/D"
 	HAY_DNI="FALSE"
 	HAY_CUIL="FALSE"
 fi
@@ -91,11 +97,11 @@ NOMBRE_COL[25]=""				#	Z	PATH
 
 
 # mapfile -t NCM_Lineas <  <( grep -v -e '^#.*' -e '^$' ${LISTADO_DATOS} )
-mapfile -t NCM_Lineas <  <(cat ${LISTADO_DATOS} )
-printf "Cant de Lineas de Datos: %4s\n"  ${#NCM_Lineas[@]}
+#mapfile -t NCM_Lineas <  <(cat ${LISTADO_DATOS} )
+#printf "Cant de Lineas de Datos: %4s\n"  ${#NCM_Lineas[@]}
 
-let NCM_TOT_LIN=${#NCM_Lineas[@]}-1
-let NCM_linecount=0
+#let NCM_TOT_LIN=${#NCM_Lineas[@]}-1
+#let NCM_linecount=0
 
 echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
 
@@ -122,6 +128,7 @@ IFS=,
 
 
 # while  read VAL_COL[0] VAL_COL[1] VAL_COL[2] VAL_COL[3] kakita #  VAL_COL[4]
+
 while IFS=','  read -ra VAL_COL
 do
 	procesar_dni_cuil
