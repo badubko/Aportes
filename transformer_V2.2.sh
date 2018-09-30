@@ -35,6 +35,9 @@ then
 	DNI=$( cut -d\- -f2 <<<${VAL_COL[21]} )
 	CUIL="DETER"
 	return
+else
+	HAY_DNI="FALSE"
+	HAY_CUIL="FALSE"
 fi
 	
 
@@ -123,7 +126,7 @@ do
 	procesar_dni_cuil
 	if [ ${HAY_DNI} = "TRUE" ]
 	then
-		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "DNI" ${DNI} "CUIL" ${HAY_CUIL}
+		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "dni=" ${DNI} "CUIL" ${HAY_CUIL}
 	else
 		printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
 	fi
