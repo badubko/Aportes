@@ -45,6 +45,9 @@ fi
 
 }
 
+#------------------------------------------------------------------------------
+# main
+#------------------------------------------------------------------------------
 declare -a NOMBRE_COL
 declare -a NCM_Lineas 
 declare -a VAL_COL
@@ -71,7 +74,7 @@ NOMBRE_COL[0]="apellido"		#	A	Apellido
 NOMBRE_COL[1]="nombres"			#	B	Nombre	
 NOMBRE_COL[2]="estado"			#	C	Estado
 NOMBRE_COL[3]="comentarios"		#	D	Comentarios
-NOMBRE_COL[4]="F_ingreso"		#	E	Fecha de ingreso
+NOMBRE_COL[4]="f_ingreso"		#	E	Fecha de ingreso
 NOMBRE_COL[5]="socio"			#	F	Socio
 NOMBRE_COL[6]=""				# 	G	Proyectos	 N/A
 NOMBRE_COL[7]=""				#	H	Area de trabajo del proyecto
@@ -84,15 +87,22 @@ NOMBRE_COL[13]=""				#	N	Talleres
 NOMBRE_COL[14]=""				#	O	Actividades
 NOMBRE_COL[15]="acuerdo"		#	P	Acuerdo
 NOMBRE_COL[16]=""				#	Q	Z
-NOMBRE_COL[17]="telefono_1"		#	R	Telefono 1
+NOMBRE_COL[17]="tel_1"			#	R	Telefono 1
 NOMBRE_COL[18]=""				#	S	Presentacion
 NOMBRE_COL[19]="referido_por"	#	T	Referido por
-NOMBRE_COL[20]="telefono_2"		#	U	Telefono 2
+NOMBRE_COL[20]="tel_2"			#	U	Telefono 2
 NOMBRE_COL[21]="cuil"			#	V	CUIL	
-NOMBRE_COL[22]="e_mail"			#	W	E-mail
+NOMBRE_COL[22]="email_1"		#	W	E-mail
 NOMBRE_COL[23]="entrevistado_por" # X	Entrevistado por
 NOMBRE_COL[24]=""				#	Y	Item type
 NOMBRE_COL[25]=""				#	Z	PATH
+
+# Columnas que no estan en la planilla
+NOMBRE_COL[30]="dni"
+NOMBRE_COL[31]="profesion"
+NOMBRE_COL[32]="email_2"
+NOMBRE_COL[33]="rol"
+
 
 
 # mapfile -t NCM_Lineas <  <( grep -v -e '^#.*' -e '^$' ${LISTADO_DATOS} )
