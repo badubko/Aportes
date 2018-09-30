@@ -47,8 +47,31 @@ fi
 
 procesar_especialidad ()
 {
-	
-	
+
+
+if [ ${#VAL_COL[9]} = 0 ]
+then
+	HAY_ESPEC=FALSE
+	return
+fi
+
+IFS_ANT=${IFS}
+
+VAL_COL[9]=${VAL_COL[9]//\#/}	 #  Eliminamos el caracter "#"
+
+IFS=';'  read -r -a ESPECIALIDADES <<< ${VAL_COL[9]}
+
+let TOT_ESPEC=${#ESPECIALIDADES[@]}-1
+
+let i=0
+
+while [ $i -le ${TOT_ESPEC} ]
+do
+	printf "%s %s %s\n" "SQL Insertar=" ${DNI} ${ESPECIALIDADES[$i]}
+	let i++
+done
+
+IFS=${IFS_ANT}
 	
 }
 
@@ -60,6 +83,8 @@ procesar_especialidad ()
 declare -a NOMBRE_COL
 declare -a NCM_Lineas 
 declare -a VAL_COL
+declare -a ESPECIALIDADES
+declare -i TOT_ESPEC i
 
 DNI_NO_DISPONIBLE=""
 CUIL_NO_DISPONIBLE="N/D"
@@ -114,24 +139,7 @@ NOMBRE_COL[33]="rol"
 
 
 
-# mapfile -t NCM_Lineas <  <( grep -v -e '^#.*' -e '^$' ${LISTADO_DATOS} )
-#mapfile -t NCM_Lineas <  <(cat ${LISTADO_DATOS} )
-#printf "Cant de Lineas de Datos: %4s\n"  ${#NCM_Lineas[@]}
-
-#let NCM_TOT_LIN=${#NCM_Lineas[@]}-1
-#let NCM_linecount=0
-
 echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
-
-#IFS=,
-#while [ ${NCM_linecount} -le ${NCM_TOT_LIN} ]
-#do
-##	read VAL_COL[0] VAL_COL[1] VAL_COL[2] VAL_COL[3] <<<${NCM_Lineas[${NCM_linecount}]}
-	#read VAL_COL[0]  <<<${NCM_Lineas[${NCM_linecount}]}
-	#echo ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]}
-	#printf "\n"
-	#let NCM_linecount++
-#done
 
 
 
@@ -145,8 +153,6 @@ OLDIFS=$IFS
 IFS=,
 
 
-# while  read VAL_COL[0] VAL_COL[1] VAL_COL[2] VAL_COL[3] kakita #  VAL_COL[4]
-
 while IFS=','  read -ra VAL_COL
 do
 	procesar_dni_cuil
@@ -154,10 +160,11 @@ do
 	if [ ${HAY_DNI} = "TRUE" ]
 	then
 		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "dni=" ${DNI} "cuil" ${CUIL}
+		procesar_especialidad
 	else
 		printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
 	fi
-	
+		
 	#if [ ${HAY_DNI} = "TRUE"]
 	#then
 		#printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
@@ -166,9 +173,17 @@ do
 		#printf "%s\n" "Values"
 		#printf "('%s','%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]} ${VAL_COL[9]}
 		#printf ";\n"
+		
  	#else
 		#printf "%s %s %s \n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} "-->SIN DNI"
 	#fi
+	
+	#if [ ${HAY_DNI} = "TRUE" ]
+	#then
+		#procesar_especialidad
+	#fi	
+	
+	
 done < ${LISTADO_DATOS}
 
 IFS=$OLDIFS
