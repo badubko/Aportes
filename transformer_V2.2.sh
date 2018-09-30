@@ -10,10 +10,8 @@ HAY_DNI="FALSE"
 
 if [ ${#VAL_COL[21]} = 0 ]  # No hay cargado DNI ni CUIL
 then
-	DNI=""
-	CUIL="N/D"
-	HAY_DNI="FALSE"
-	HAY_CUIL="FALSE"
+	HAY_DNI="FALSE" ; 	DNI="${DNI_NO_DISPONIBLE}"
+	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}"
 	return
 fi
 
@@ -22,11 +20,11 @@ if [ $? = 0 ]
 then
 #	echo "Remover DNI y tomar los digitos"
 	HAY_DNI="TRUE"
-	HAY_CUIL="FALSE"
 	DNI=${VAL_COL[21]^^}
 	DNI=${DNI#DNI }
 	DNI=${DNI//./}
-	CUIL="N/D"
+	
+	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}"
 	return
 fi
 
@@ -40,10 +38,8 @@ then
 	CUIL=$( sed -r 's/.*([0-9]{2}-)([0-9]{8}-)([0-9]{1}) .*/\1\2\3/' <<<${VAL_COL[21]} ) 
 	return
 else
-	DNI=""
-	CUIL="N/D"
-	HAY_DNI="FALSE"
-	HAY_CUIL="FALSE"
+	HAY_DNI="FALSE" ; 	DNI="${DNI_NO_DISPONIBLE}"
+	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}"
 fi
 	
 
@@ -52,6 +48,9 @@ fi
 declare -a NOMBRE_COL
 declare -a NCM_Lineas 
 declare -a VAL_COL
+
+DNI_NO_DISPONIBLE=""
+CUIL_NO_DISPONIBLE="N/D"
 
 PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
 
