@@ -33,7 +33,7 @@ then
 	HAY_DNI="TRUE"
 	HAY_CUIL="TRUE"
 	DNI=$( cut -d\- -f2 <<<${VAL_COL[21]} )
-	CUIL=$( sed -r 's/.*([0-9]{2}-)([0-9]{8}-)([0-9]{1}) .*/\1\2\3/') 
+	CUIL=$( sed -r 's/.*([0-9]{2}-)([0-9]{8}-)([0-9]{1}) .*/\1\2\3/' <<<${VAL_COL[21]} ) 
 	return
 else
 	HAY_DNI="FALSE"
