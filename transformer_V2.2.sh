@@ -33,7 +33,7 @@ then
 	HAY_DNI="TRUE"
 	HAY_CUIL="TRUE"
 	DNI=$( cut -d\- -f2 <<<${VAL_COL[21]} )
-	CUIL="DETER"
+	CUIL=$( sed -r 's/.*([0-9]{2}-)([0-9]{8}-)([0-9]{1}) .*/\1\2\3/') 
 	return
 else
 	HAY_DNI="FALSE"
@@ -50,6 +50,7 @@ declare -a VAL_COL
 PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
 
 LISTADO_DATOS="../Datos/Libro2_V1.1.csv"
+
 TABLE_NAME_1="T_VOLS1"
 TABLE_NAME_2="T_VOLS2"
 
@@ -124,9 +125,10 @@ IFS=,
 while IFS=','  read -ra VAL_COL
 do
 	procesar_dni_cuil
+	
 	if [ ${HAY_DNI} = "TRUE" ]
 	then
-		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "dni=" ${DNI} "CUIL" ${HAY_CUIL}
+		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "dni=" ${DNI} "cuil" ${CUIL}
 	else
 		printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
 	fi
