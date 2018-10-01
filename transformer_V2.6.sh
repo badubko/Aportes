@@ -93,9 +93,10 @@ IFS=$OLDIFS
 FORM_NOM_COL="("
 FORM_VAL="("
 LINEA_NOM=""
-LINEA_VAL=""
+
 
 # Loop
+
 echo ${LISTA_COLUMNAS[@]}
 for INDEX in ${LISTA_COLUMNAS[@]}
 do
