@@ -26,7 +26,7 @@ then
 	DNI=${DNI#DNI }
 #	DNI=${DNI//./}
 	VAL_COL[30]=${DNI//./} # ESta es la columna DNI
-	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}"
+	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}" ; VAL_COL[21]=${CUIL}
 	return
 fi
 
@@ -220,7 +220,7 @@ do
 		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[30]} ${NOMBRE_COL[21]}
 		printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[30]} ${VAL_COL[21]} 
 #		generar_insert 
-#		procesar_especialidad
+		procesar_especialidad
 	else
 		printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
 	fi
