@@ -94,19 +94,21 @@ LINEA_VAL=""
 echo ${LISTA_COLUMNAS[@]}
 for INDEX in ${LISTA_COLUMNAS[@]}
 do
-	FORM_NOM_COL+="\`%s\`"','
+	FORM_NOM_COL+="\`%s\`,"
 	LINEA_NOM+="${NOMBRE_COL[${INDEX}]}"" "
 	
 	FORM_VAL+="'%s'"','
 	LINEA_VAL+="${VAL_COL[${INDEX}]}"" "
 done
-
+echo ${FORM_NOM_COL}
+echo ${FORM_VAL}
 # Completamos los formatos
-FORM_NOM_COL="${FORM_NOM_COM%,*}"')\n'
+FORM_NOM_COL+="${FORM_NOM_COM%,*}"')\n'
 FORM_VAL="${FORM_VAL%,*}"")\n"
 
 echo ${FORM_NOM_COL}
 echo ${FORM_VAL}
+
 
 
 # Imprimimos las lineas de sentencias SQL
