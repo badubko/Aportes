@@ -107,16 +107,16 @@ PRIMERA_COL=TRUE
 
 # echo ${LISTA_COLUMNAS[@]}
 
-#for INDEX in ${LISTA_COLUMNAS[@]}
-#do
-	#if [ ${PRIMERA_COL} = "TRUE" ]
-	#then
-		#PRIMERA_COL=FALSE
-		#continue
-	#else
-##	FORM_NOM_COL+="%s,"
-	#printf  ",%s" "${NOMBRE_COL[${INDEX}]}"
-#done
+for INDEX in ${LISTA_COLUMNAS[@]}
+do
+	if [ ${PRIMERA_COL} = "TRUE" ]
+	then
+		PRIMERA_COL=FALSE
+		continue
+	else
+		printf  ",\`%s\`" "${NOMBRE_COL[${INDEX}]}"
+	fi
+done
 
 printf ")\n" 
 
