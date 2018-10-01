@@ -24,8 +24,8 @@ then
 	HAY_DNI="TRUE"
 	DNI=${VAL_COL[21]^^}
 	DNI=${DNI#DNI }
-	DNI=${DNI//./}
-	
+#	DNI=${DNI//./}
+	VAL_COL[30]=${DNI//./} # ESta es la columna DNI
 	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}"
 	return
 fi
@@ -36,8 +36,10 @@ then
 #	echo "Obtener DNI y guardar CUIL"
 	HAY_DNI="TRUE"
 	HAY_CUIL="TRUE"
-	DNI=$( cut -d\- -f2 <<<${VAL_COL[21]} )
-	CUIL=$( sed -r 's/.*([0-9]{2}-)([0-9]{8}-)([0-9]{1}) .*/\1\2\3/' <<<${VAL_COL[21]} ) 
+#	DNI=$( cut -d\- -f2 <<<${VAL_COL[21]} )
+	VAL_COL[30]=$( cut -d\- -f2 <<<${VAL_COL[21]} )   # ESta es la columna DNI
+#	CUIL=$( sed -r 's/.*([0-9]{2}-)([0-9]{8}-)([0-9]{1}) .*/\1\2\3/' <<<${VAL_COL[21]} ) 
+	VAL_COL[21]=$( sed -r 's/.*([0-9]{2}-)([0-9]{8}-)([0-9]{1}) .*/\1\2\3/' <<<${VAL_COL[21]} ) # Este es el CUIL
 	return
 else
 	HAY_DNI="FALSE" ; 	DNI="${DNI_NO_DISPONIBLE}"
@@ -214,8 +216,10 @@ do
 	if [ ${HAY_DNI} = "TRUE" ]
 	then
 #		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "dni=" ${DNI} "cuil" ${CUIL}
-		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[30]} ${NOMBRE_COL[21]}
-		generar_insert 
+
+		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[30]} ${NOMBRE_COL[21]}
+		printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[30]} ${VAL_COL[21]} 
+#		generar_insert 
 #		procesar_especialidad
 	else
 		printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
