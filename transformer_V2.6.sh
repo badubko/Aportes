@@ -81,6 +81,10 @@ IFS=${IFS_ANT}
 generar_insert()
 #------------------------------------------------------------------------------
 {
+	
+CURR_IFS=$IFS
+IFS=$OLDIFS
+
 FORM_NOM_COL="("
 FORM_VAL="("
 LINEA_NOM=""
@@ -90,25 +94,32 @@ LINEA_VAL=""
 echo ${LISTA_COLUMNAS[@]}
 for INDEX in ${LISTA_COLUMNAS[@]}
 do
-	FORM_NOM_COL+="\`%s\`,"
+	FORM_NOM_COL+="\`%s\`"','
 	LINEA_NOM+="${NOMBRE_COL[${INDEX}]}"" "
 	
-	FORM_VAL+="\'%s\',"
+	FORM_VAL+="'%s'"','
 	LINEA_VAL+="${VAL_COL[${INDEX}]}"" "
 done
 
 # Completamos los formatos
-FORM_NOM_COL+=${FORM_NOM_COM%,*}")\n"
-FORM_VAL+=${FORM_VAL%,*}")\n"
+FORM_NOM_COL="${FORM_NOM_COM%,*}"')\n'
+FORM_VAL="${FORM_VAL%,*}"")\n"
+
+echo ${FORM_NOM_COL}
+echo ${FORM_VAL}
+
 
 # Imprimimos las lineas de sentencias SQL
 printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
 printf "${FORM_NOM_COL}" ${LINEA_NOM}
 
-#printf "%s\n" "Values"
-#printf "${FORM_VAL}" "${LINEA_VAL}"
+printf "%s\n" "Values"
+printf "${FORM_VAL}" "${LINEA_VAL}"
 
 printf ";\n"
+
+IFS=$CURR_IFS
+
 return
 }
 
@@ -217,10 +228,10 @@ do
 	then
 #		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "dni=" ${DNI} "cuil" ${CUIL}
 
-		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[30]} ${NOMBRE_COL[21]}
-		printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[30]} ${VAL_COL[21]} 
-#		generar_insert 
-		procesar_especialidad
+#		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[30]} ${NOMBRE_COL[21]}
+#		printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[30]} ${VAL_COL[21]} 
+		generar_insert 
+#		procesar_especialidad
 	else
 		printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
 	fi
