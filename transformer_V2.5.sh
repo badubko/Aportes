@@ -88,7 +88,7 @@ do
 	FORM_NOM_COL+="\`%s\`,"
 	LINEA_NOM+="${NOMBRE_COL[${INDEX}]"" "
 	
-	FORM_VAL+="'%s',"
+	FORM_VAL+="\'%s\',"
 	LINEA_VAL+="${VAL_COL[${INDEX}]}"" "
 done
 
