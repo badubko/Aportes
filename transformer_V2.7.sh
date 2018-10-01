@@ -129,7 +129,8 @@ let i=0
 
 while [ $i -le ${TOT_ESPEC} ]
 do
-	printf "%s %s %s\n" "SQL Insertar=" ${DNI} ${ESPECIALIDADES[$i]}
+#	printf "%s %s %s\n" "SQL Insertar=" ${DNI} ${ESPECIALIDADES[$i]}
+	generar_insert ${TABLE_NAME_3}
 	let i++
 done
 
@@ -153,8 +154,9 @@ FORM_VAL="("
 LINEA_NOM=""
 
 printf "%s %s \n" "Insert into"  ${TABLE_NAME}
- 
-printf "(%s%s%s"  '`' "${NOMBRE_COL[0]}" '`' 
+
+COL=${LISTA_COLUMNAS[0]} 						# Cual es la primer columna
+printf "(%s%s%s"  '`' "${NOMBRE_COL[${COL}]}" '`' 
 
 PRIMERA_COL=TRUE
 
@@ -174,7 +176,7 @@ printf ")\n"
 
 printf "%s\n" "Values"
 
-printf "('%s'" "${VAL_COL[0]}" 
+printf "('%s'" "${VAL_COL[${COL}]}" 
 PRIMERA_COL=TRUE
 
 for INDEX in ${LISTA_COLUMNAS[@]}
@@ -206,7 +208,9 @@ declare -a NCM_Lineas
 declare -a VAL_COL
 declare -a ESPECIALIDADES
 declare -i TOT_ESPEC i
-declare -a LISTA_COLUMNAS=(0 1 30 21)
+declare -a LISTA_COLUMNAS
+declare -a LISTA_COLUMNAS_1=(0 1 30 21)
+declare -a LISTA_COLUMNAS_2=(30 9)
 
 run_data								#---->
 
@@ -219,6 +223,7 @@ SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
 
 TABLE_NAME_1="T_VOLS1"
 TABLE_NAME_2="T_VOLS2"
+TABLE_NAME_3="T_ESPECIALIDADES"
 
 genera_banner
 
@@ -279,7 +284,13 @@ do
 
 #		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[30]} ${NOMBRE_COL[21]}
 #		printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[30]} ${VAL_COL[21]} 
+
+        unset LISTA_COLUMNAS
+        LISTA_COLUMNAS=("${LISTA_COLUMNAS_1[@]}")
 		generar_insert ${TABLE_NAME_1}
+
+        unset LISTA_COLUMNAS
+        LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
 		procesar_especialidad
 	else
 		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
