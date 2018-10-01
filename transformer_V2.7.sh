@@ -97,25 +97,26 @@ LINEA_NOM=""
 printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
 
 # Loop
-printf "(%s"   " ${NOMBRE_COL[0]}" 
+# printf "(%s"   " ${NOMBRE_COL[0]}" 
  
-#printf "(%s%s%s"  '\`' "${NOMBRE_COL[0]}" '\`' 
+printf "(%s%s%s"  '`' "${NOMBRE_COL[0]}" '`' 
 #printf ")\n"
 #exit
 
 PRIMERA_COL=TRUE
 
 # echo ${LISTA_COLUMNAS[@]}
-for INDEX in ${LISTA_COLUMNAS[@]}
-do
-	if [ ${PRIMERA_COL} = "TRUE" ]
-	then
-		PRIMERA_COL=FALSE
-		continue
-	else
-#	FORM_NOM_COL+="%s,"
-	printf  ",%s" "${NOMBRE_COL[${INDEX}]}"
-done
+
+#for INDEX in ${LISTA_COLUMNAS[@]}
+#do
+	#if [ ${PRIMERA_COL} = "TRUE" ]
+	#then
+		#PRIMERA_COL=FALSE
+		#continue
+	#else
+##	FORM_NOM_COL+="%s,"
+	#printf  ",%s" "${NOMBRE_COL[${INDEX}]}"
+#done
 
 printf ")\n" 
 
