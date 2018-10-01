@@ -94,22 +94,39 @@ FORM_NOM_COL="("
 FORM_VAL="("
 LINEA_NOM=""
 
+printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
 
 # Loop
+printf "(%s"   " ${NOMBRE_COL[0]}" 
+ 
+#printf "(%s%s%s"  '\`' "${NOMBRE_COL[0]}" '\`' 
+#printf ")\n"
+#exit
 
-echo ${LISTA_COLUMNAS[@]}
+PRIMERA_COL=TRUE
+
+# echo ${LISTA_COLUMNAS[@]}
 for INDEX in ${LISTA_COLUMNAS[@]}
 do
-	FORM_NOM_COL+="\`%s\`,"
-	LINEA_NOM+="${NOMBRE_COL[${INDEX}]}"" "
+	if [ ${PRIMERA_COL} = "TRUE" ]
+	then
+		PRIMERA_COL=FALSE
+		continue
+	else
+#	FORM_NOM_COL+="%s,"
+	printf  ",%s" "${NOMBRE_COL[${INDEX}]}"
 done
-# Completamos los formatos
-FORM_NOM_COL+="${FORM_NOM_COM%,*}"')\n'
-echo ${FORM_NOM_COL}
 
-# Las primeras 3 lineas
-printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
-printf "${FORM_NOM_COL}" ${LINEA_NOM}
+printf ")\n" 
+
+# Completamos los formatos
+#FORM_NOM_COL+="${FORM_NOM_COM%,*}"')\n'
+#echo ${FORM_NOM_COL}
+
+# Las lineas 2 y 3
+
+# printf "${FORM_NOM_COL}" ${LINEA_NOM}
+
 printf "%s\n" "Values"
 
 
