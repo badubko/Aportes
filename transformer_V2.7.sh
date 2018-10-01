@@ -142,11 +142,9 @@ generar_insert()
 {
 # Imprimimos las lineas de sentencias SQL
 	
-#Insert into city
- #(`city_id`,`city`,`country_id`,`last_update`)
-#Values
-#('261','Kanchrapara','44','2006-02-15 04:45:25.000')
-	
+
+TABLE_NAME=${1}  # Le pasamos como parametro el nombre de la tabla
+
 CURR_IFS=$IFS
 IFS=$OLDIFS
 
@@ -154,7 +152,7 @@ FORM_NOM_COL="("
 FORM_VAL="("
 LINEA_NOM=""
 
-printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
+printf "%s %s \n" "Insert into"  ${TABLE_NAME}
  
 printf "(%s%s%s"  '`' "${NOMBRE_COL[0]}" '`' 
 
@@ -281,8 +279,8 @@ do
 
 #		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[30]} ${NOMBRE_COL[21]}
 #		printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[30]} ${VAL_COL[21]} 
-		generar_insert 
-#		procesar_especialidad
+		generar_insert ${TABLE_NAME_1}
+		procesar_especialidad
 	else
 		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
 	fi
