@@ -82,6 +82,11 @@ generar_insert()
 #------------------------------------------------------------------------------
 {
 	
+#Insert into city
+ #(`city_id`,`city`,`country_id`,`last_update`)
+#Values
+#('261','Kanchrapara','44','2006-02-15 04:45:25.000')
+	
 CURR_IFS=$IFS
 IFS=$OLDIFS
 
@@ -96,28 +101,42 @@ for INDEX in ${LISTA_COLUMNAS[@]}
 do
 	FORM_NOM_COL+="\`%s\`,"
 	LINEA_NOM+="${NOMBRE_COL[${INDEX}]}"" "
-	
-	FORM_VAL+="'%s'"','
-	LINEA_VAL+="${VAL_COL[${INDEX}]}"" "
 done
-
-echo ${FORM_NOM_COL}
-echo ${FORM_VAL}
 # Completamos los formatos
 FORM_NOM_COL+="${FORM_NOM_COM%,*}"')\n'
-FORM_VAL="${FORM_VAL%,*}"")\n"
-
 echo ${FORM_NOM_COL}
-echo ${FORM_VAL}
+
+# Las primeras 3 lineas
+printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
+printf "${FORM_NOM_COL}" ${LINEA_NOM}
+printf "%s\n" "Values"
+
+
+
+
+printf "('%s'" "${VAL_COL[0]}" 
+PRIMERA_COL=TRUE
+for INDEX in ${LISTA_COLUMNAS[@]}
+do
+	if [ ${PRIMERA_COL} = "TRUE" ]
+	then
+		PRIMERA_COL=FALSE
+		continue
+	else
+		printf "%s'%s'" ',' "${VAL_COL[${INDEX}]}"
+	fi
+done
+
+printf "%s\n" ")"
+
+#echo ${FORM_NOM_COL}
+#echo ${FORM_VAL}
+
 
 
 
 # Imprimimos las lineas de sentencias SQL
-printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
-printf "${FORM_NOM_COL}" ${LINEA_NOM}
 
-printf "%s\n" "Values"
-printf "${FORM_VAL}" ${LINEA_VAL}
 
 printf ";\n"
 
@@ -211,17 +230,8 @@ NOMBRE_COL[33]="rol"
 echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
 
 
-
-#Insert into city
- #(`city_id`,`city`,`country_id`,`last_update`)
-#Values
-#('261','Kanchrapara','44','2006-02-15 04:45:25.000')
-
-
 OLDIFS=$IFS
 IFS=,
-
-
 
 while IFS=','  read -ra VAL_COL
 do
