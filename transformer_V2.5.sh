@@ -79,22 +79,24 @@ IFS=${IFS_ANT}
 generar_insert()
 #------------------------------------------------------------------------------
 {
-FORM_NOM_COL="("
-FORM_VAL="("
+FORM_NOM_COL="\("
+FORM_VAL="\("
+LINEA_NOM=""
+LINEA_VAL=""
 
 # Loop
 for INDEX in ${LISTA_COLUMNAS[@]}
 do
 	FORM_NOM_COL+="\`%s\`,"
-	LINEA_NOM+="${NOMBRE_COL[${INDEX}]"" "
+	LINEA_NOM+="${NOMBRE_COL[${INDEX}]}"" "
 	
 	FORM_VAL+="\'%s\',"
 	LINEA_VAL+="${VAL_COL[${INDEX}]}"" "
 done
 
 # Completamos los formatos
-FORM_NOM_COL=${FORM_NOM_COM%,*}")\n"
-FORM_VAL=${FORM_VAL%,*}")\n"
+FORM_NOM_COL=${FORM_NOM_COM%,*}"\)\n"
+FORM_VAL=${FORM_VAL%,*}"\)\n"
 
 # Imprimimos las lineas de sentencias SQL
 printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
@@ -103,7 +105,7 @@ printf "%s\n" "Values"
 printf "${FORM_VAL}" "${LINEA_VAL}"
 
 printf ";\n"
-
+return
 }
 
 
@@ -211,7 +213,7 @@ do
 	then
 #		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "dni=" ${DNI} "cuil" ${CUIL}
 		generar_insert 
-		procesar_especialidad
+#		procesar_especialidad
 	else
 		printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
 	fi
