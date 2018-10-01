@@ -116,6 +116,7 @@ printf "%s\n" "Values"
 
 printf "('%s'" "${VAL_COL[0]}" 
 PRIMERA_COL=TRUE
+
 for INDEX in ${LISTA_COLUMNAS[@]}
 do
 	if [ ${PRIMERA_COL} = "TRUE" ]
@@ -123,7 +124,7 @@ do
 		PRIMERA_COL=FALSE
 		continue
 	else
-		printf "%s'%s'" ',' "${VAL_COL[${INDEX}]}"
+		printf ",'%s'" "${VAL_COL[${INDEX}]}"
 	fi
 done
 
