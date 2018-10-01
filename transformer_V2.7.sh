@@ -39,6 +39,11 @@ DIR_REF=${PWD}
 
 FLAG_TERM="FALSE"           # Si algun parametro no esta definido terminar temprano
 
+if [ ! -f  "${CSV_IN_FILE}" ]
+then
+	echo "El Archivo ${CSV_IN_FILE} NO existe"
+	exit
+fi
 
 if [  -d "${SQL_OUT_FILE}" ]
 then
@@ -216,13 +221,12 @@ SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
 
 TABLE_NAME_1="T_VOLS1"
 TABLE_NAME_2="T_VOLS2"
+
+genera_banner
+
 PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
 
-if [ ! -f  "${CSV_IN_FILE}" ]
-then
-	echo "El Archivo ${CSV_IN_FILE} NO existe"
-	exit
-fi
+
 
 # NOMBRE_COL	Nombre Col			   COL	Nombre Excel
 #		[Indice]
