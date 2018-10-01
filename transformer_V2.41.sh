@@ -4,9 +4,7 @@
 #-------------------------------------------------------------------------------
 # Version:
 
-#------------------------------------------------------------------------------
 procesar_dni_cuil()
-#------------------------------------------------------------------------------
 {
 HAY_DNI="FALSE"
 
@@ -46,9 +44,8 @@ fi
 	
 
 }
-#------------------------------------------------------------------------------
+
 procesar_especialidad ()
-#------------------------------------------------------------------------------
 {
 if [ ${#VAL_COL[9]} = 0 ]
 then
@@ -75,40 +72,7 @@ done
 IFS=${IFS_ANT}
 	
 }
-#------------------------------------------------------------------------------
-generar_insert()
-#------------------------------------------------------------------------------
-{
-FORM_NOM_COL="("
-FORM_VAL="("
-LINEA_NOM=""
-LINEA_VAL=""
 
-# Loop
-echo ${LISTA_COLUMNAS[@]}
-for INDEX in ${LISTA_COLUMNAS[@]}
-do
-	FORM_NOM_COL+="\`%s\`,"
-	LINEA_NOM+="${NOMBRE_COL[${INDEX}]}"" "
-	
-	FORM_VAL+="\'%s\',"
-	LINEA_VAL+="${VAL_COL[${INDEX}]}"" "
-done
-
-# Completamos los formatos
-FORM_NOM_COL+=${FORM_NOM_COM%,*}")\n"
-FORM_VAL+=${FORM_VAL%,*}")\n"
-
-# Imprimimos las lineas de sentencias SQL
-printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
-printf "${FORM_NOM_COL}" ${LINEA_NOM}
-
-#printf "%s\n" "Values"
-#printf "${FORM_VAL}" "${LINEA_VAL}"
-
-printf ";\n"
-return
-}
 
 
 #------------------------------------------------------------------------------
@@ -119,25 +83,6 @@ declare -a NCM_Lineas
 declare -a VAL_COL
 declare -a ESPECIALIDADES
 declare -i TOT_ESPEC i
-declare -a LISTA_COLUMNAS=(0 1 30 21)
-
-#-------------------------------------------------------------------------------
-# RUN_DATE Fecha y hora de la ejecucion del script
-RUN_DATE="$(date  +\#\ %Y\/%m\/%d\ %H:%M)"
-RUN_DATE_FILE="$(date  +%Y-%m-%d_%H%M)"    # Nuevo formato para usar en nombres de Archivo
-#-------------------------------------------------------------------------------
-# Nombre abreviado del script en ejecucion... para que los mensajes sean mas legibles.
-
-VERS=${0##*_} 		# Elimina /abc/def/ghi/./Gen_list_files_cel_NO_copiar_  Queda "V0.5.sh"
-VERS=${VERS%.*} 	# Elimina ".sh"  Queda "V0.5"
-
-COM=${0%_*}    				#; echo $COM   # ELimina "_V0.5.sh"
-COM=${COM##*/} 				#; echo $COM   # Elimina "/abc/def/ghi/./"
-COMANDO_COMPLETO=${COM}   	# Para determinar que secciones ejecutar en Verifica.. y Genera
-COM=${COM:0:4} 				#; echo $COM   # Solo los primeros 4 caracteres
-
-NOM_ABREV=${COM}'..'${VERS}
-#-------------------------------------------------------------------------------
 
 DNI_NO_DISPONIBLE=""
 CUIL_NO_DISPONIBLE="N/D"
@@ -206,22 +151,36 @@ OLDIFS=$IFS
 IFS=,
 
 
-
 while IFS=','  read -ra VAL_COL
 do
 	procesar_dni_cuil
 	
+	#if [ ${HAY_DNI} = "TRUE" ]
+	#then
+		#printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "dni=" ${DNI} "cuil" ${CUIL}
+		#procesar_especialidad
+	#else
+		#printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
+	#fi
+		
 	if [ ${HAY_DNI} = "TRUE" ]
 	then
-#		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "dni=" ${DNI} "cuil" ${CUIL}
-		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[30]} ${NOMBRE_COL[21]}
-		generar_insert 
-#		procesar_especialidad
-	else
-		printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
-	fi
+		printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
+		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}\
+		${NOMBRE_COL[9]}
+		printf "%s\n" "Values"
+		printf "('%s','%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]} ${VAL_COL[9]}
+		printf ";\n"
 		
-
+ 	else
+		printf "%s %s %s \n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} "-->SIN DNI"
+	fi
+	
+	#if [ ${HAY_DNI} = "TRUE" ]
+	#then
+		#procesar_especialidad
+	#fi	
+	
 	
 done < ${LISTADO_DATOS}
 
