@@ -4,6 +4,60 @@
 #-------------------------------------------------------------------------------
 # Version:
 
+linea_guiones ()
+{
+echo "----------------------------------------------------------------"  
+}
+
+
+run_data()
+{	
+#-------------------------------------------------------------------------------
+# RUN_DATE Fecha y hora de la ejecucion del script
+RUN_DATE="$(date  +\#\ %Y\/%m\/%d\ %H:%M)"
+RUN_DATE_FILE="$(date  +%Y-%m-%d_%H%M)"    # Nuevo formato para usar en nombres de Archivo
+#-------------------------------------------------------------------------------
+# Nombre abreviado del script en ejecucion... para que los mensajes sean mas legibles.
+
+VERS=${0##*_} 		# Elimina /abc/def/ghi/./Gen_list_files_cel_NO_copiar_  Queda "V0.5.sh"
+VERS=${VERS%.*} 	# Elimina ".sh"  Queda "V0.5"
+
+COM=${0%_*}    				#; echo $COM   # ELimina "_V0.5.sh"
+COM=${COM##*/} 				#; echo $COM   # Elimina "/abc/def/ghi/./"
+COMANDO_COMPLETO=${COM}   	# Para determinar que secciones ejecutar en Verifica.. y Genera
+COM=${COM:0:4} 				#; echo $COM   # Solo los primeros 4 caracteres
+
+NOM_ABREV=${COM}'..'${VERS}
+return
+}
+#-------------------------------------------------------------------------------
+
+genera_banner ()
+{	
+# Aca viene el banner y la lista de variables a incluir
+DIR_REF=${PWD}
+
+FLAG_TERM="FALSE"           # Si algun parametro no esta definido terminar temprano
+
+
+if [  -d "${SQL_OUT_FILE}" ]
+then
+  echo "${NOM_ABREV}: No se puede generar: ${SQL_OUT_FILE} Es un directorio"
+  exit
+fi
+
+
+  linea_guiones 										>${SQL_OUT_FILE}
+  echo "-- Nombre    :  ${SQL_OUT_FILE}"				>>${SQL_OUT_FILE}
+  echo "-- Creado por: $0     Run_date  : ${RUN_DATE}"	>>${SQL_OUT_FILE}
+  printf "%s\n" "--"									>>${SQL_OUT_FILE}
+  echo "-- Directorio Origen:  ${PWD}" 					>>${SQL_OUT_FILE}
+  echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${SQL_OUT_FILE}
+  linea_guiones 										>>${SQL_OUT_FILE}
+  echo "-- Variables incluidas:"			  	        >>${SQL_OUT_FILE}	
+return	
+}
+
 #------------------------------------------------------------------------------
 procesar_dni_cuil()
 #------------------------------------------------------------------------------
@@ -81,6 +135,7 @@ IFS=${IFS_ANT}
 generar_insert()
 #------------------------------------------------------------------------------
 {
+# Imprimimos las lineas de sentencias SQL
 	
 #Insert into city
  #(`city_id`,`city`,`country_id`,`last_update`)
@@ -95,17 +150,10 @@ FORM_VAL="("
 LINEA_NOM=""
 
 printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
-
-# Loop
-# printf "(%s"   " ${NOMBRE_COL[0]}" 
  
 printf "(%s%s%s"  '`' "${NOMBRE_COL[0]}" '`' 
-#printf ")\n"
-#exit
 
 PRIMERA_COL=TRUE
-
-# echo ${LISTA_COLUMNAS[@]}
 
 for INDEX in ${LISTA_COLUMNAS[@]}
 do
@@ -120,18 +168,8 @@ done
 
 printf ")\n" 
 
-# Completamos los formatos
-#FORM_NOM_COL+="${FORM_NOM_COM%,*}"')\n'
-#echo ${FORM_NOM_COL}
-
-# Las lineas 2 y 3
-
-# printf "${FORM_NOM_COL}" ${LINEA_NOM}
 
 printf "%s\n" "Values"
-
-
-
 
 printf "('%s'" "${VAL_COL[0]}" 
 PRIMERA_COL=TRUE
@@ -148,15 +186,6 @@ do
 done
 
 printf "%s\n" ")"
-
-#echo ${FORM_NOM_COL}
-#echo ${FORM_VAL}
-
-
-
-
-# Imprimimos las lineas de sentencias SQL
-
 
 printf ";\n"
 
@@ -176,37 +205,22 @@ declare -a ESPECIALIDADES
 declare -i TOT_ESPEC i
 declare -a LISTA_COLUMNAS=(0 1 30 21)
 
-#-------------------------------------------------------------------------------
-# RUN_DATE Fecha y hora de la ejecucion del script
-RUN_DATE="$(date  +\#\ %Y\/%m\/%d\ %H:%M)"
-RUN_DATE_FILE="$(date  +%Y-%m-%d_%H%M)"    # Nuevo formato para usar en nombres de Archivo
-#-------------------------------------------------------------------------------
-# Nombre abreviado del script en ejecucion... para que los mensajes sean mas legibles.
-
-VERS=${0##*_} 		# Elimina /abc/def/ghi/./Gen_list_files_cel_NO_copiar_  Queda "V0.5.sh"
-VERS=${VERS%.*} 	# Elimina ".sh"  Queda "V0.5"
-
-COM=${0%_*}    				#; echo $COM   # ELimina "_V0.5.sh"
-COM=${COM##*/} 				#; echo $COM   # Elimina "/abc/def/ghi/./"
-COMANDO_COMPLETO=${COM}   	# Para determinar que secciones ejecutar en Verifica.. y Genera
-COM=${COM:0:4} 				#; echo $COM   # Solo los primeros 4 caracteres
-
-NOM_ABREV=${COM}'..'${VERS}
-#-------------------------------------------------------------------------------
+run_data								#---->
 
 DNI_NO_DISPONIBLE=""
 CUIL_NO_DISPONIBLE="N/D"
 
-PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
-
-LISTADO_DATOS="../Datos/Libro2_V1.1.csv"
+SQL_SCRIPT_NAME="VOLS"
+CSV_IN_FILE="../Datos/Libro2_V1.1.csv"
+SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
 
 TABLE_NAME_1="T_VOLS1"
 TABLE_NAME_2="T_VOLS2"
+PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
 
-if [ ! -f  "${LISTADO_DATOS}" ]
+if [ ! -f  "${CSV_IN_FILE}" ]
 then
-	echo "El Archivo ${LISTADO_DATOS} NO existe"
+	echo "El Archivo ${CSV_IN_FILE} NO existe"
 	exit
 fi
 
@@ -247,7 +261,7 @@ NOMBRE_COL[33]="rol"
 
 
 
-echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
+# echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
 
 
 OLDIFS=$IFS
@@ -266,12 +280,12 @@ do
 		generar_insert 
 #		procesar_especialidad
 	else
-		printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
+		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
 	fi
 		
 
 	
-done < ${LISTADO_DATOS}
+done < ${CSV_IN_FILE}
 
 IFS=$OLDIFS
 	
