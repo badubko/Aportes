@@ -100,6 +100,7 @@ do
 	FORM_VAL+="'%s'"','
 	LINEA_VAL+="${VAL_COL[${INDEX}]}"" "
 done
+
 echo ${FORM_NOM_COL}
 echo ${FORM_VAL}
 # Completamos los formatos
@@ -116,7 +117,7 @@ printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
 printf "${FORM_NOM_COL}" ${LINEA_NOM}
 
 printf "%s\n" "Values"
-printf "${FORM_VAL}" "${LINEA_VAL}"
+printf "${FORM_VAL}" ${LINEA_VAL}
 
 printf ";\n"
 
