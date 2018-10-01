@@ -216,24 +216,7 @@ do
 		printf "%s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
 	fi
 		
-	#if [ ${HAY_DNI} = "TRUE"]
-	#then
-		#printf "%s %s \n" "Insert into"  ${TABLE_NAME_1}
-		#printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}\
-		#${NOMBRE_COL[9]}
-		#printf "%s\n" "Values"
-		#printf "('%s','%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[2]} ${VAL_COL[3]} ${VAL_COL[9]}
-		#printf ";\n"
-		
- 	#else
-		#printf "%s %s %s \n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} "-->SIN DNI"
-	#fi
-	
-	#if [ ${HAY_DNI} = "TRUE" ]
-	#then
-		#procesar_especialidad
-	#fi	
-	
+
 	
 done < ${LISTADO_DATOS}
 
