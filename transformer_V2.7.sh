@@ -261,8 +261,8 @@ declare -a ESPECIALIDADES
 declare -i TOT_ESPEC i cont TOT_ESTADOS
 
 declare -a LISTA_COLUMNAS
-declare -a LISTA_COLUMNAS_1=(0 1 30 21)
-# declare -a LISTA_COLUMNAS_2  ( habra que elegir las COLUMNAS )
+declare -a LISTA_COLUMNAS_1=(0 1 30)
+declare -a LISTA_COLUMNAS_2=(30 21)				#DNI CUIL
 declare -a LISTA_COLUMNAS_3=(30 100)			# DNI ESPECIALIDAD
 declare -a LISTA_COLUMNAS_4=(30 2 34)			# DNI ESTADO f_act_estado
 
@@ -363,15 +363,19 @@ do
 #		printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[30]} ${VAL_COL[21]} 
  
        
-        
+ # Tabla T_VOLS1       
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_1[@]}")
         generar_insert ${TABLE_NAME_1}				#---->
-
+        
+ # Tabla T_VOLS2       
+        unset LISTA_COLUMNAS
+        LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
+        generar_insert ${TABLE_NAME_2}				#---->
+        
+# Tabla T_ESPECIALIDAD_VOLS	
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
-
-# Tabla T_ESPECIALIDAD_VOLS		
 		procesar_especialidad						#---->
 		
 		
@@ -379,7 +383,6 @@ do
 		estandarizar_estado							#---->
 		unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
-        
         generar_insert ${TABLE_NAME_4}  			#---->
 													
 	else
