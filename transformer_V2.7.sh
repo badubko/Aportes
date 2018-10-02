@@ -76,7 +76,9 @@ then
 	return
 fi
 
-/bin/grep -q -e "^ *DNI" <<< ${VAL_COL[21]^^}    # EL patron DNI (may o min) precedido de blancos
+/bin/grep -q -e "^ *DNI" <<< ${VAL_COL[21]^^}	# EL patron DNI (may o min) 
+												# al comienzo de la linea
+												# precedido de blancos o no
 if [ $? = 0 ]
 then
 #	echo "Remover DNI y tomar los digitos"
