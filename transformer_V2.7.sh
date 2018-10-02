@@ -152,6 +152,8 @@ TABLE_NAME=${1}  # Le pasamos como parametro el nombre de la tabla
 CURR_IFS=$IFS
 IFS=$OLDIFS
 
+echo $
+
 FORM_NOM_COL="("
 FORM_VAL="("
 LINEA_NOM=""
@@ -223,15 +225,27 @@ estandarizar_estado()
 # Se editan aca los contenidos de la columna esta para estandarizarlos
 # 
 
+#let TOT_ESPEC=${#ESPECIALIDADES[@]}-1
+
+#let i=0
+
+#while [ $i -le ${TOT_ESPEC} ]
+
+
+
 # SOlo estandarizar estado 
 
-for cont in ${#ESTADO_EN_PLANILLA[@]}-1
+let cont=0
+let TOT_ESTADOS=${#ESTADO_EN_PLANILLA[@]}-1
+
+while [ ${cont} -le ${TOT_ESTADOS} ]
 do
-	if [ ${VAL_COL[2]} = ${ESTADO_EN_PLANILLA[${$cont}]}   ]
+	if [ "${VAL_COL[2]}" = "${ESTADO_EN_PLANILLA[${cont}]}"   ]
 	then
-		${VAL_COL[2]}=${ESTADO_EN_TABLA[${$cont}]} 
+		VAL_COL[2]="${ESTADO_EN_TABLA[${cont}]}" 
 		return
 	fi
+	let cont++
 done
 
 
@@ -245,14 +259,17 @@ declare -a NOMBRE_COL
 declare -a NCM_Lineas 
 declare -a VAL_COL
 declare -a ESPECIALIDADES
-declare -i TOT_ESPEC i
+declare -i TOT_ESPEC i cont TOT_ESTADOS
+
 declare -a LISTA_COLUMNAS
-declare -a LISTA_COLUMNAS_1=(0 1 2 30 21)
+declare -a LISTA_COLUMNAS_1=(0 1 30 21)
 # declare -a LISTA_COLUMNAS_2  ( habra que elegir las COLUMNAS )
-declare -a LISTA_COLUMNAS_3=(30 100)
+declare -a LISTA_COLUMNAS_3=(30 100)			# DNI ESPECIALIDAD
+declare -a LISTA_COLUMNAS_4=(30 2 34)			# DNI ESTADO f_act_estado
+
 declare -a ESTADO_EN_PLANILLA ESTADO_EN_TABLA
 
-run_data								#---->
+run_data														#---->
 
 DNI_NO_DISPONIBLE=""
 CUIL_NO_DISPONIBLE="N/D"
@@ -264,8 +281,9 @@ SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
 TABLE_NAME_1="T_VOLS1"
 TABLE_NAME_2="T_VOLS2"
 TABLE_NAME_3="T_ESPECIALIDADES"
+TABLE_NAME_4="T_ESTADO_VOLS"
 
-genera_banner								#---->
+genera_banner													#---->
 
 PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
 
@@ -277,9 +295,9 @@ ESTADO_EN_PLANILLA[0]="Asignado"			; ESTADO_EN_TABLA[0]="ASIGNADO"
 ESTADO_EN_PLANILLA[1]="Disponible"			; ESTADO_EN_TABLA[1]="DISPONIBLE"	
 ESTADO_EN_PLANILLA[2]="No Disponible Temp."	; ESTADO_EN_TABLA[2]="NO_DISP_TEMP"
 ESTADO_EN_PLANILLA[3]="Interno"				; ESTADO_EN_TABLA[3]="INTERNO"
-ESTADO_EN_PLANILLA[4]="De Baja"				; ESTADO_EN_TABLA[4]="DE_BAJA"		(*) No sabemos si es correcto
-ESTADO_EN_PLANILLA[5]="Con Restricciones"	; ESTADO_EN_TABLA[5]="CON_RESTRICC"	(*) No sabemos si es correcto
-ESTADO_EN_PLANILLA[6]="Puntual"				; ESTADO_EN_TABLA[6]="PUNTUAL"		(*) No sabemos si es correcto
+ESTADO_EN_PLANILLA[4]="De Baja"				; ESTADO_EN_TABLA[4]="DE_BAJA"		#(*) No sabemos si es correcto
+ESTADO_EN_PLANILLA[5]="Con Restricciones"	; ESTADO_EN_TABLA[5]="CON_RESTRICC"	#(*) No sabemos si es correcto
+ESTADO_EN_PLANILLA[6]="Puntual"				; ESTADO_EN_TABLA[6]="PUNTUAL"		#(*) No sabemos si es correcto
 
 
 
@@ -317,11 +335,15 @@ NOMBRE_COL[30]="dni"
 NOMBRE_COL[31]="profesion"
 NOMBRE_COL[32]="email_2"
 NOMBRE_COL[33]="rol"
+NOMBRE_COL[34]="f_act_estado"
 
 # Columnas auxiliares para recibir datos parseados
 NOMBRE_COL[100]="especialidad"
-# NOMBRE_COL[101]=""
 
+
+# Por ahora cargamos una sola vez la fecha de actualizacion...
+
+FECHA_ACTUALIZ="$(date  +\%Y-%m-%d\ %H:%M:%S)"  # Fecha de actualizacion 
 
 # echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
 
@@ -332,6 +354,7 @@ IFS=,
 while IFS=','  read -ra VAL_COL
 do
 	procesar_dni_cuil								#---->
+	VAL_COL[34]=${FECHA_ACTUALIZ}
 	
 	if [ ${HAY_DNI} = "TRUE" ]
 	then
@@ -339,15 +362,27 @@ do
 
 #		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[30]} ${NOMBRE_COL[21]}
 #		printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[30]} ${VAL_COL[21]} 
-
+ 
+       
+        
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_1[@]}")
-        estandarizar_estado							#---->
-		generar_insert ${TABLE_NAME_1}				#---->
+        generar_insert ${TABLE_NAME_1}				#---->
 
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
+
+# Tabla T_ESPECIALIDAD_VOLS		
 		procesar_especialidad						#---->
+		
+		
+# Tabla T_ESTADO_VOLS
+		estandarizar_estado							#---->
+		unset LISTA_COLUMNAS
+        LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
+        
+        generar_insert ${TABLE_NAME_4}  			#---->
+													
 	else
 		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
 	fi
