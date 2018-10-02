@@ -132,6 +132,7 @@ let i=0
 while [ $i -le ${TOT_ESPEC} ]
 do
 #	printf "%s %s %s\n" "SQL Insertar=" ${DNI} ${ESPECIALIDADES[$i]}
+    VAL_COL[100]=${ESPECIALIDADES[$i]}
 	generar_insert ${TABLE_NAME_3}
 	let i++
 done
@@ -212,7 +213,8 @@ declare -a ESPECIALIDADES
 declare -i TOT_ESPEC i
 declare -a LISTA_COLUMNAS
 declare -a LISTA_COLUMNAS_1=(0 1 30 21)
-declare -a LISTA_COLUMNAS_2=(30 9)
+# declare -a LISTA_COLUMNAS_2  ( ELEGIR COLUMNAS )
+declare -a LISTA_COLUMNAS_3=(30 100)
 
 run_data								#---->
 
@@ -244,7 +246,7 @@ NOMBRE_COL[5]="socio"				#	F	Socio
 NOMBRE_COL[6]=""					#	G	Proyectos	 N/A
 NOMBRE_COL[7]=""					#	H	Area de trabajo del proyecto
 NOMBRE_COL[8]=""					#	I	Aptitud
-NOMBRE_COL[9]="especialidad"		#	J	Especialidad (parsear y a otra tabla)
+NOMBRE_COL[9]="array_especialidad"	#	J	Especialidad (parsear y a otra tabla)
 NOMBRE_COL[10]=""					#	K	Asertividad
 NOMBRE_COL[11]=""					#	L	Sociabilidad
 NOMBRE_COL[12]=""					#	M	Actitud
@@ -268,6 +270,8 @@ NOMBRE_COL[31]="profesion"
 NOMBRE_COL[32]="email_2"
 NOMBRE_COL[33]="rol"
 
+# Columnas auxiliares para recibir datos parseados
+NOMBRE_COL[100]="especialidad"
 
 
 # echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
@@ -292,7 +296,7 @@ do
 		generar_insert ${TABLE_NAME_1}
 
         unset LISTA_COLUMNAS
-        LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
+        LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
 		procesar_especialidad
 	else
 		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
