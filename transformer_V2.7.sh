@@ -164,7 +164,7 @@ for INDEX in ${LISTA_COLUMNAS[@]}
 do
 	if [ ${PRIMERA_COL} = "TRUE" ]
 	then
-		PRIMERA_COL=FALSE
+		PRIMERA_COL=FALSE             # salteamos la 1a col por el tema de las comas
 		continue
 	else
 		printf  ",\`%s\`" "${NOMBRE_COL[${INDEX}]}"
