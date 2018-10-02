@@ -202,6 +202,41 @@ IFS=$CURR_IFS
 return
 }
 
+#------------------------------------------------------------------------------
+estandarizar_estado()
+#------------------------------------------------------------------------------
+{
+# Se editan aca los contenidos de la columna esta para normalizarla
+
+# Estado en					Estado en
+# Planilla 					Tabla
+#-----------------------------
+# Asignado					ASIGNADO
+# Disponible				DISPONIBLE
+# No Disponible Temp.		NO_DISP_TEMP
+# Interno					INTERNO	
+# De Baja					DE_BAJA				(*) No sabemos si es correcto
+# Con Restricciones			CON_RESTRICC		(*) No sabemos si es correcto
+# Puntual					PUNTUAL				(*) No sabemos si es correcto
+#
+
+# Se editan aca los contenidos de la columna esta para estandarizarlos
+# 
+
+# SOlo estandarizar estado 
+
+for cont in ${#ESTADO_EN_PLANILLA[@]}-1
+do
+	if [ ${VAL_COL[2]} = ${ESTADO_EN_PLANILLA[${$cont}]}   ]
+	then
+		${VAL_COL[2]}=${ESTADO_EN_TABLA[${$cont}]} 
+		return
+	fi
+done
+
+
+}
+
 
 #------------------------------------------------------------------------------
 # main
@@ -212,9 +247,10 @@ declare -a VAL_COL
 declare -a ESPECIALIDADES
 declare -i TOT_ESPEC i
 declare -a LISTA_COLUMNAS
-declare -a LISTA_COLUMNAS_1=(0 1 30 21)
-# declare -a LISTA_COLUMNAS_2  ( ELEGIR COLUMNAS )
+declare -a LISTA_COLUMNAS_1=(0 1 2 30 21)
+# declare -a LISTA_COLUMNAS_2  ( habra que elegir las COLUMNAS )
 declare -a LISTA_COLUMNAS_3=(30 100)
+declare -a ESTADO_EN_PLANILLA ESTADO_EN_TABLA
 
 run_data								#---->
 
@@ -229,9 +265,21 @@ TABLE_NAME_1="T_VOLS1"
 TABLE_NAME_2="T_VOLS2"
 TABLE_NAME_3="T_ESPECIALIDADES"
 
-genera_banner
+genera_banner								#---->
 
 PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
+
+
+# Estado en										Estado en
+# Planilla 										Tabla
+#---------------------------------------------------------------------------
+ESTADO_EN_PLANILLA[0]="Asignado"			; ESTADO_EN_TABLA[0]="ASIGNADO"		
+ESTADO_EN_PLANILLA[1]="Disponible"			; ESTADO_EN_TABLA[1]="DISPONIBLE"	
+ESTADO_EN_PLANILLA[2]="No Disponible Temp."	; ESTADO_EN_TABLA[2]="NO_DISP_TEMP"
+ESTADO_EN_PLANILLA[3]="Interno"				; ESTADO_EN_TABLA[3]="INTERNO"
+ESTADO_EN_PLANILLA[4]="De Baja"				; ESTADO_EN_TABLA[4]="DE_BAJA"		(*) No sabemos si es correcto
+ESTADO_EN_PLANILLA[5]="Con Restricciones"	; ESTADO_EN_TABLA[5]="CON_RESTRICC"	(*) No sabemos si es correcto
+ESTADO_EN_PLANILLA[6]="Puntual"				; ESTADO_EN_TABLA[6]="PUNTUAL"		(*) No sabemos si es correcto
 
 
 
@@ -272,6 +320,7 @@ NOMBRE_COL[33]="rol"
 
 # Columnas auxiliares para recibir datos parseados
 NOMBRE_COL[100]="especialidad"
+# NOMBRE_COL[101]=""
 
 
 # echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
@@ -282,7 +331,7 @@ IFS=,
 
 while IFS=','  read -ra VAL_COL
 do
-	procesar_dni_cuil
+	procesar_dni_cuil								#---->
 	
 	if [ ${HAY_DNI} = "TRUE" ]
 	then
@@ -293,11 +342,12 @@ do
 
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_1[@]}")
-		generar_insert ${TABLE_NAME_1}
+        estandarizar_estado							#---->
+		generar_insert ${TABLE_NAME_1}				#---->
 
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
-		procesar_especialidad
+		procesar_especialidad						#---->
 	else
 		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
 	fi
