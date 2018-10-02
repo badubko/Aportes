@@ -152,7 +152,6 @@ TABLE_NAME=${1}  # Le pasamos como parametro el nombre de la tabla
 CURR_IFS=$IFS
 IFS=$OLDIFS
 
-echo $
 
 FORM_NOM_COL="("
 FORM_VAL="("
@@ -169,7 +168,7 @@ for INDEX in ${LISTA_COLUMNAS[@]}
 do
 	if [ ${PRIMERA_COL} = "TRUE" ]
 	then
-		PRIMERA_COL=FALSE             # salteamos la 1a col por el tema de las comas
+		PRIMERA_COL=FALSE             # salteamos la Primera col por el tema de las comas
 		continue
 	else
 		printf  ",\`%s\`" "${NOMBRE_COL[${INDEX}]}"
