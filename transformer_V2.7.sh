@@ -335,7 +335,7 @@ declare -a TELEFONOS
 declare -i TOT_ESPEC TOT_TELS i cont TOT_ESTADOS
 
 declare -a LISTA_COLUMNAS
-declare -a LISTA_COLUMNAS_1=(0 1 30 22 32)      # Apellido Nombre DNI email1 email2
+declare -a LISTA_COLUMNAS_1=(30 0 1 22 32)      # Apellido Nombre DNI email1 email2
 declare -a LISTA_COLUMNAS_2=(30 21)				#DNI CUIL
 declare -a LISTA_COLUMNAS_3=(30 100)			# DNI ESPECIALIDAD
 declare -a LISTA_COLUMNAS_4=(30 2 34)			# DNI ESTADO f_act_estado
