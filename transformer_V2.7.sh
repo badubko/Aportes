@@ -186,6 +186,8 @@ procesar_email()
 {
 if [ ${#VAL_COL[22]} = 0 ]
 then
+	VAL_COL[22]="${EMAIL_NO_DISPONIBLE}"
+	VAL_COL[32]="${EMAIL_NO_DISPONIBLE}"
 	HAY_EMAIL=FALSE
 	return
 fi
