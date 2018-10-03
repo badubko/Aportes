@@ -75,17 +75,20 @@ then
 	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}"
 	return
 fi
-
+printf "%s\n" 	${VAL_COL[21]^^}
 /bin/grep -q -e "^ *DNI" <<< ${VAL_COL[21]^^}	# EL patron DNI (may o min) 
 												# al comienzo de la linea
 												# precedido de blancos o no
+												
+
+											
 if [ $? = 0 ]
 then
 #	echo "Remover DNI y tomar los digitos"
 	HAY_DNI="TRUE"
 	DNI=${VAL_COL[21]^^}
 	DNI=${DNI#DNI }
-#	DNI=${DNI//./}
+
 	VAL_COL[30]=${DNI//./} # ESta es la columna DNI
 	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}" ; VAL_COL[21]=${CUIL}
 	return
@@ -465,6 +468,7 @@ do
 													
 	else
 		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
+		printf "%s\n" "-- "
 	fi
 		
 
