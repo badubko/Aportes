@@ -140,6 +140,61 @@ done
 IFS=${IFS_ANT}
 	
 }
+
+#------------------------------------------------------------------------------
+procesar_telefono()
+#------------------------------------------------------------------------------
+{
+if [ ${#VAL_COL[17]} = 0 ]
+then
+	HAY_TELEFONO=FALSE
+	return
+fi
+
+
+
+VAL_COL[20]=$( cut -d\; -f2 <<<${VAL_COL[17]} )  # Valor Telefono 2
+VAL_COL[17]=$( cut -d\; -f1 <<<${VAL_COL[17]} )  # Valor Telefono 1
+
+return
+
+# IFS_ANT=${IFS}
+
+# VAL_COL[9]=${VAL_COL[9]//\#/}	 #  Eliminamos el caracter "#"
+
+#IFS=';'  read -r -a TELEFONOS <<< ${VAL_COL[17]}
+
+#let TOT_TELS=${#TELEFONOS[@]}-1
+
+#let i=0
+
+#while [ $i -le ${TOT_TELS} ]
+#do
+##	printf "%s %s %s\n" "SQL Insertar=" ${DNI} ${ESPECIALIDADES[$i]}
+    #VAL_COL[100]=${ESPECIALIDADES[$i]}
+	#generar_insert ${TABLE_NAME_3}
+	#let i++
+#done
+
+#IFS=${IFS_ANT}	
+	
+}
+#------------------------------------------------------------------------------
+procesar_email()
+#------------------------------------------------------------------------------
+{
+if [ ${#VAL_COL[22]} = 0 ]
+then
+	HAY_EMAIL=FALSE
+	return
+fi
+
+
+
+VAL_COL[32]=$( cut -d\; -f2 <<<${VAL_COL[22]} )  # Valor email 2
+VAL_COL[22]=$( cut -d\; -f1 <<<${VAL_COL[22]} )  # Valor email 1
+
+return
 #------------------------------------------------------------------------------
 generar_insert()
 #------------------------------------------------------------------------------
@@ -258,10 +313,11 @@ declare -a NOMBRE_COL
 declare -a NCM_Lineas 
 declare -a VAL_COL
 declare -a ESPECIALIDADES
-declare -i TOT_ESPEC i cont TOT_ESTADOS
+declare -a TELEFONOS
+declare -i TOT_ESPEC TOT_TELS i cont TOT_ESTADOS
 
 declare -a LISTA_COLUMNAS
-declare -a LISTA_COLUMNAS_1=(0 1 30)
+declare -a LISTA_COLUMNAS_1=(0 1 30 22 32)      # Apellido Nombre DNI email1 email2
 declare -a LISTA_COLUMNAS_2=(30 21)				#DNI CUIL
 declare -a LISTA_COLUMNAS_3=(30 100)			# DNI ESPECIALIDAD
 declare -a LISTA_COLUMNAS_4=(30 2 34)			# DNI ESTADO f_act_estado
@@ -362,7 +418,8 @@ do
 #		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[30]} ${NOMBRE_COL[21]}
 #		printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[30]} ${VAL_COL[21]} 
  
-       
+        # procesar_telefono							#---->
+        procesar_email								#---->
  # Tabla T_VOLS1       
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_1[@]}")
@@ -371,19 +428,19 @@ do
  # Tabla T_VOLS2       
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
-        generar_insert ${TABLE_NAME_2}				#---->
+        # generar_insert ${TABLE_NAME_2}				#---->
         
 # Tabla T_ESPECIALIDAD_VOLS	
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
-		procesar_especialidad						#---->
+		# procesar_especialidad						#---->
 		
 		
 # Tabla T_ESTADO_VOLS
 		estandarizar_estado							#---->
 		unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
-        generar_insert ${TABLE_NAME_4}  			#---->
+        # generar_insert ${TABLE_NAME_4}  			#---->
 													
 	else
 		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
