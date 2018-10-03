@@ -79,16 +79,14 @@ printf "%s\n" 	${VAL_COL[21]^^}
 /bin/grep -q -e "^ *DNI" <<< ${VAL_COL[21]^^}	# EL patron DNI (may o min) 
 												# al comienzo de la linea
 												# precedido de blancos o no
-												
 
-											
 if [ $? = 0 ]
 then
 #	echo "Remover DNI y tomar los digitos"
 	HAY_DNI="TRUE"
 	DNI=${VAL_COL[21]^^}
-	DNI=${DNI#DNI }
-
+#	DNI=${DNI#DNI }
+    DNI=$(/bin/sed -r 's/DNI *//' <<< $DNI)
 	VAL_COL[30]=${DNI//./} # ESta es la columna DNI
 	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}" ; VAL_COL[21]=${CUIL}
 	return
@@ -452,19 +450,19 @@ do
  # Tabla T_VOLS2       
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
-        # generar_insert ${TABLE_NAME_2}				#---->
+        generar_insert ${TABLE_NAME_2}				#---->
         
 # Tabla T_ESPECIALIDAD_VOLS	
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
-		# procesar_especialidad						#---->
+		procesar_especialidad						#---->
 		
 		
 # Tabla T_ESTADO_VOLS
 		estandarizar_estado							#---->
 		unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
-        # generar_insert ${TABLE_NAME_4}  			#---->
+        generar_insert ${TABLE_NAME_4}  			#---->
 													
 	else
 		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
