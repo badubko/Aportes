@@ -154,6 +154,7 @@ fi
 
 
 VAL_COL[20]=$( cut -d\; -f2 <<<${VAL_COL[17]} )  # Valor Telefono 2
+
 VAL_COL[17]=$( cut -d\; -f1 <<<${VAL_COL[17]} )  # Valor Telefono 1
 
 return
@@ -189,12 +190,29 @@ then
 	return
 fi
 
+# SI tiene un solo telefono agregar ";" al final 
+/bin/grep -q -e "; *$" <<< ${VAL_COL[22]}
+if [ $? != 0 ]
+then
+	VAL_COL[22]+=";"
+fi
 
 
 VAL_COL[32]=$( cut -d\; -f2 <<<${VAL_COL[22]} )  # Valor email 2
+
 VAL_COL[22]=$( cut -d\; -f1 <<<${VAL_COL[22]} )  # Valor email 1
 
+for num_col in 22 32
+do
+	if [ ${#VAL_COL[${num_col}]} = 0 ]
+	then
+		VAL_COL[${num_col}]="${EMAIL_NO_DISPONIBLE}"
+	fi
+done
+
 return
+}
+
 #------------------------------------------------------------------------------
 generar_insert()
 #------------------------------------------------------------------------------
@@ -328,6 +346,7 @@ run_data														#---->
 
 DNI_NO_DISPONIBLE=""
 CUIL_NO_DISPONIBLE="N/D"
+EMAIL_NO_DISPONIBLE="N/D"
 
 SQL_SCRIPT_NAME="VOLS"
 CSV_IN_FILE="../Datos/Libro2_V1.2.csv"
