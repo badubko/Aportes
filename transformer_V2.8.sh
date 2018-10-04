@@ -63,6 +63,29 @@ fi
 return	
 }
 
+validate_line()
+{
+	
+if [ ${#VAL_COL[@]}  -ne ${NUM_COLS}     ]
+then
+	LINE_IS_VALID="FALSE"
+	if [ ${#VAL_COL[@]} -le ${NUM_COLS}    ]
+	then
+		echo "Hay un c/r en la linea" "${VAL_COL[0]}" "${VAL_COL[1]}"
+#		echo "Error   -->" ${VAL_COL[@]}
+	fi
+
+	if [ ${#VAL_COL[@]} -gt ${NUM_COLS}  ]
+	then
+		echo "Hay DEMASIADAS comas en la linea" "${VAL_COL[0]}" "${VAL_COL[1]}"
+#		echo "Error   -->" ${VAL_COL[@]}
+	fi
+else
+	LINE_IS_VALID="TRUE"
+fi	
+	
+	}
+
 #------------------------------------------------------------------------------
 procesar_dni_cuil()
 #------------------------------------------------------------------------------
@@ -359,6 +382,8 @@ TABLE_NAME_2="T_VOLS2"
 TABLE_NAME_3="T_ESPECIALIDADES"
 TABLE_NAME_4="T_ESTADO_VOLS"
 
+NUM_COLS=26 # Number of expected columns to read from csv file
+
 genera_banner													#---->
 
 PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
@@ -429,7 +454,14 @@ IFS=,
 
 while IFS=','  read -ra VAL_COL
 do
+	validate_line
+	if [ ${LINE_IS_VALID} = "FALSE" ]
+	then
+		continue
+	fi
+	
 	procesar_dni_cuil								#---->
+	
 	VAL_COL[34]=${FECHA_ACTUALIZ}
 	
 	if [ ${HAY_DNI} = "TRUE" ]
