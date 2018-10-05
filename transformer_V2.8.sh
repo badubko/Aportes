@@ -59,7 +59,7 @@ fi
   echo "-- Directorio Origen:  ${PWD}" 					>>${SQL_OUT_FILE}
   echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${SQL_OUT_FILE}
   linea_guiones 										>>${SQL_OUT_FILE}
-  echo "-- Variables incluidas:"			  	        >>${SQL_OUT_FILE}	
+# echo "-- Variables incluidas:"			  	        >>${SQL_OUT_FILE}	
 
 #------------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ fi
   echo "-- Directorio Origen:  ${PWD}" 					>>${ERROR_LOG}
   echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${ERROR_LOG}
   linea_guiones 										>>${ERROR_LOG}
-  echo "-- Variables incluidas:"			  	        >>${ERROR_LOG} 
+
   
   
   
@@ -120,6 +120,7 @@ then
 	return
 fi
 #  printf "%s\n" 	${VAL_COL[21]^^}
+
 /bin/grep -q -e "^ *DNI" <<< ${VAL_COL[21]^^}	# EL patron DNI (may o min) 
 												# al comienzo de la linea
 												# precedido de blancos o no
@@ -130,6 +131,7 @@ then
 	DNI=${VAL_COL[21]^^}
 #	DNI=${DNI#DNI }
     DNI=$(/bin/sed -r 's/DNI *//' <<< $DNI)
+    DNI=$(/bin/sed -r 's/DNI *.*//' <<< $DNI)
 	VAL_COL[30]=${DNI//./} # ESta es la columna DNI
 	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}" ; VAL_COL[21]=${CUIL}
 	return
@@ -514,13 +516,13 @@ do
 		unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
         generar_insert ${TABLE_NAME_4}  	>>${SQL_OUT_FILE}		#---->
-													
+		
+		linea_guiones >>${SQL_OUT_FILE}											
 	else
 		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"  	>>${ERROR_LOG}
 		printf "%s\n" "-- " 													>>${ERROR_LOG}
 	fi
-		
-
+	
 	unset VAL_COL
 	
 done < ${CSV_IN_FILE}
