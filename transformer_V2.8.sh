@@ -60,6 +60,27 @@ fi
   echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${SQL_OUT_FILE}
   linea_guiones 										>>${SQL_OUT_FILE}
   echo "-- Variables incluidas:"			  	        >>${SQL_OUT_FILE}	
+
+#------------------------------------------------------------------------------
+
+if [  -d "${ERROR_LOG}" ]
+then
+  echo "${NOM_ABREV}: No se puede generar: ${ERROR_LOG} Es un directorio"
+  exit
+fi
+
+
+  linea_guiones 										>${ERROR_LOG}
+  echo "-- Nombre    :  ${ERROR_LOG}"					>>${ERROR_LOG}
+  echo "-- Creado por: $0     Run_date  : ${RUN_DATE}"	>>${ERROR_LOG}
+  printf "%s\n" "--"									>>${ERROR_LOG}
+  echo "-- Directorio Origen:  ${PWD}" 					>>${ERROR_LOG}
+  echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${ERROR_LOG}
+  linea_guiones 										>>${ERROR_LOG}
+  echo "-- Variables incluidas:"			  	        >>${ERROR_LOG} 
+  
+  
+  
 return	
 }
 
@@ -375,7 +396,9 @@ EMAIL_NO_DISPONIBLE="N/D"
 
 SQL_SCRIPT_NAME="VOLS"
 CSV_IN_FILE="../Datos/Libro2_V1.2.csv"
+
 SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
+ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
 
 TABLE_NAME_1="T_VOLS1"
 TABLE_NAME_2="T_VOLS2"
@@ -454,7 +477,8 @@ IFS=,
 
 while IFS=','  read -ra VAL_COL
 do
-	validate_line
+	validate_line  >>${ERROR_LOG}
+	
 	if [ ${LINE_IS_VALID} = "FALSE" ]
 	then
 		continue
@@ -497,8 +521,8 @@ do
         generar_insert ${TABLE_NAME_4}  			#---->
 													
 	else
-		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"
-		printf "%s\n" "-- "
+		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"  >>${ERROR_LOG}
+		printf "%s\n" "-- " >>${ERROR_LOG}
 	fi
 		
 
