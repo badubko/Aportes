@@ -175,9 +175,8 @@ let i=0
 
 while [ $i -le ${TOT_ESPEC} ]
 do
-#	printf "%s %s %s\n" "SQL Insertar=" ${DNI} ${ESPECIALIDADES[$i]}
     VAL_COL[100]=${ESPECIALIDADES[$i]}
-	generar_insert ${TABLE_NAME_3}
+	generar_insert ${TABLE_NAME_3}  >>${SQL_OUT_FILE}		#---->>
 	let i++
 done
 
@@ -490,10 +489,6 @@ do
 	
 	if [ ${HAY_DNI} = "TRUE" ]
 	then
-#		printf "%s %s %s %s %s %s %s \n" ${VAL_COL[0]} ${VAL_COL[1]}  ${VAL_COL[21]} "dni=" ${DNI} "cuil" ${CUIL}
-
-#		printf "(\`%s\`,\`%s\`,\`%s\`,\`%s\`)\n" ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[30]} ${NOMBRE_COL[21]}
-#		printf "('%s','%s','%s','%s')\n" ${VAL_COL[0]} ${VAL_COL[1]} ${VAL_COL[30]} ${VAL_COL[21]} 
  
         # procesar_telefono							#---->
 
@@ -501,12 +496,12 @@ do
  # Tabla T_VOLS1       
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_1[@]}")
-        generar_insert ${TABLE_NAME_1}				#---->
+        generar_insert ${TABLE_NAME_1}	>>${SQL_OUT_FILE}			#---->
         
  # Tabla T_VOLS2       
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
-        generar_insert ${TABLE_NAME_2}				#---->
+        generar_insert ${TABLE_NAME_2}	>>${SQL_OUT_FILE}			#---->
         
 # Tabla T_ESPECIALIDAD_VOLS	
         unset LISTA_COLUMNAS
@@ -518,11 +513,11 @@ do
 		estandarizar_estado							#---->
 		unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
-        generar_insert ${TABLE_NAME_4}  			#---->
+        generar_insert ${TABLE_NAME_4}  	>>${SQL_OUT_FILE}		#---->
 													
 	else
-		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"  >>${ERROR_LOG}
-		printf "%s\n" "-- " >>${ERROR_LOG}
+		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"  	>>${ERROR_LOG}
+		printf "%s\n" "-- " 													>>${ERROR_LOG}
 	fi
 		
 
