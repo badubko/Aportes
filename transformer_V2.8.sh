@@ -94,17 +94,17 @@ then
 	then
 		echo "Hay un c/r en la linea" "${VAL_COL[0]}" "${VAL_COL[1]}"
 #		echo "Error   -->" ${VAL_COL[@]}
-	fi
-
-	if [ ${#VAL_COL[@]} -gt ${NUM_COLS}  ]
-	then
-		echo "Hay DEMASIADAS comas en la linea" "${VAL_COL[0]}" "${VAL_COL[1]}"
-#		echo "Error   -->" ${VAL_COL[@]}
+	else
+		if [ ${#VAL_COL[@]} -gt ${NUM_COLS}  ]  # Este if se podria omitir...
+		then
+			echo "Hay DEMASIADAS comas en la linea" "${VAL_COL[0]}" "${VAL_COL[1]}"
+#			echo "Error   -->" ${VAL_COL[@]}
+		fi
 	fi
 else
 	LINE_IS_VALID="TRUE"
 fi	
-	
+return
 	}
 
 #------------------------------------------------------------------------------
@@ -370,6 +370,10 @@ done
 
 }
 
+main_fake()
+{
+
+}
 
 #------------------------------------------------------------------------------
 # main
@@ -395,14 +399,14 @@ DNI_NO_DISPONIBLE=""
 CUIL_NO_DISPONIBLE="N/D"
 EMAIL_NO_DISPONIBLE="N/D"
 
-SQL_SCRIPT_NAME="VOLS"
+SQL_SCRIPT_NAME="USERS"
 CSV_IN_FILE="../Datos/Libro2_V1.3.csv"
 
 SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
 ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
 
-TABLE_NAME_1="T_VOLS1"
-TABLE_NAME_2="T_VOLS2"
+TABLE_NAME_1="T_USERS1"
+TABLE_NAME_2="T_USERS2"
 TABLE_NAME_3="T_ESPECIALIDADES"
 TABLE_NAME_4="T_ESTADO_VOLS"
 
