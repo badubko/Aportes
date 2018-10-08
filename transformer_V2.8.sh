@@ -370,9 +370,9 @@ done
 
 }
 
-main_fake()
+fake_main()
 {
-
+return
 }
 
 #------------------------------------------------------------------------------
@@ -391,7 +391,7 @@ declare -a LISTA_COLUMNAS_2=(30 21)				#DNI CUIL
 declare -a LISTA_COLUMNAS_3=(30 100)			# DNI ESPECIALIDAD
 declare -a LISTA_COLUMNAS_4=(30 2 34)			# DNI ESTADO f_act_estado
 
-declare -a ESTADO_EN_PLANILLA ESTADO_EN_TABLA
+declare -a ESTADO_EN_PLANILLA ESTADO_EN_TABLA	# Equivalencia de un nombre a otro
 
 run_data														#---->
 
@@ -405,10 +405,15 @@ CSV_IN_FILE="../Datos/Libro2_V1.3.csv"
 SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
 ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
 
+# Se podria usar un array asociativo y luego hacer
+# TABLE_NAME[T_USERS1]="T_USERS1"
+# Asi seria mas facil identificar a que tabla nos referimos sin tener que 
+# regresar aca...
+
 TABLE_NAME_1="T_USERS1"
 TABLE_NAME_2="T_USERS2"
 TABLE_NAME_3="T_ESPECIALIDADES"
-TABLE_NAME_4="T_ESTADO_VOLS"
+TABLE_NAME_4="T_ESTADO_USER"
 
 NUM_COLS=26 # Number of expected columns to read from csv file
 
