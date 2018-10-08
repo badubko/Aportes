@@ -34,8 +34,12 @@ return
 
 genera_banner ()
 {	
+	
+BANNER=$1
+
 # Aca viene el banner y la lista de variables a incluir
 DIR_REF=${PWD}
+
 
 FLAG_TERM="FALSE"           # Si algun parametro no esta definido terminar temprano
 
@@ -45,40 +49,63 @@ then
 	exit
 fi
 
-if [  -d "${SQL_OUT_FILE}" ]
-then
-  echo "${NOM_ABREV}: No se puede generar: ${SQL_OUT_FILE} Es un directorio"
-  exit
-fi
 
+case ${BANNER} in 
+SQL_OUT_FILE )
+	if [  -d "${SQL_OUT_FILE}" ]
+	then
+	  echo "${NOM_ABREV}: No se puede generar: ${SQL_OUT_FILE} Es un directorio"
+	  exit
+	fi
 
-  linea_guiones 										>${SQL_OUT_FILE}
-  echo "-- Nombre    :  ${SQL_OUT_FILE}"				>>${SQL_OUT_FILE}
-  echo "-- Creado por: $0     Run_date  : ${RUN_DATE}"	>>${SQL_OUT_FILE}
-  printf "%s\n" "--"									>>${SQL_OUT_FILE}
-  echo "-- Directorio Origen:  ${PWD}" 					>>${SQL_OUT_FILE}
-  echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${SQL_OUT_FILE}
-  linea_guiones 										>>${SQL_OUT_FILE}
-# echo "-- Variables incluidas:"			  	        >>${SQL_OUT_FILE}	
-
+	  linea_guiones 										>${SQL_OUT_FILE}
+	  echo "-- Nombre    :  ${SQL_OUT_FILE}"				>>${SQL_OUT_FILE}
+	  echo "-- Creado por: $0     Run_date  : ${RUN_DATE}"	>>${SQL_OUT_FILE}
+	  printf "%s\n" "--"									>>${SQL_OUT_FILE}
+	  echo "-- Directorio Origen:  ${PWD}" 					>>${SQL_OUT_FILE}
+	  echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${SQL_OUT_FILE}
+	  linea_guiones 										>>${SQL_OUT_FILE}
+	# echo "-- Variables incluidas:"			  	        >>${SQL_OUT_FILE}	
+;;
 #------------------------------------------------------------------------------
+ERROR_LOG )
+	
+	if [  -d "${ERROR_LOG}" ]
+	then
+	  echo "${NOM_ABREV}: No se puede generar: ${ERROR_LOG} Es un directorio"
+	  exit
+	fi
 
-if [  -d "${ERROR_LOG}" ]
-then
-  echo "${NOM_ABREV}: No se puede generar: ${ERROR_LOG} Es un directorio"
-  exit
-fi
+	  linea_guiones 										>${ERROR_LOG}
+	  echo "-- Nombre    :  ${ERROR_LOG}"					>>${ERROR_LOG}
+	  echo "-- Creado por: $0     Run_date  : ${RUN_DATE}"	>>${ERROR_LOG}
+	  printf "%s\n" "--"									>>${ERROR_LOG}
+	  echo "-- Directorio Origen:  ${PWD}" 					>>${ERROR_LOG}
+	  echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${ERROR_LOG}
+	  linea_guiones 										>>${ERROR_LOG}
+;;
+#------------------------------------------------------------------------------
+PRELIM_OUT_FILE )
+	if [  -d "${PRELIM_OUT_FILE}" ]
+	then
+	  echo "${NOM_ABREV}: No se puede generar: ${PRELIM_OUT_FILE} Es un directorio"
+	  exit
+	fi
 
 
-  linea_guiones 										>${ERROR_LOG}
-  echo "-- Nombre    :  ${ERROR_LOG}"					>>${ERROR_LOG}
-  echo "-- Creado por: $0     Run_date  : ${RUN_DATE}"	>>${ERROR_LOG}
-  printf "%s\n" "--"									>>${ERROR_LOG}
-  echo "-- Directorio Origen:  ${PWD}" 					>>${ERROR_LOG}
-  echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${ERROR_LOG}
-  linea_guiones 										>>${ERROR_LOG}
+	  linea_guiones 										>${PRELIM_OUT_FILE}
+	  echo "-- Nombre    :  ${PRELIM_OUT_FILE}"				>>${PRELIM_OUT_FILE}
+	  echo "-- Creado por: $0     Run_date  : ${RUN_DATE}"	>>${PRELIM_OUT_FILE}
+	  printf "%s\n" "--"									>>${PRELIM_OUT_FILE}
+	  echo "-- Directorio Origen:  ${PWD}" 					>>${PRELIM_OUT_FILE}
+	  echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${PRELIM_OUT_FILE}
+	  linea_guiones 										>>${PRELIM_OUT_FILE}
+;;
 
-  
+*)
+	echo "Valor imposible de banner" "${BANNER}"
+	exit
+;;
   
   
 return	
@@ -401,10 +428,12 @@ DNI_NO_DISPONIBLE=""
 CUIL_NO_DISPONIBLE="N/D"
 EMAIL_NO_DISPONIBLE="N/D"
 
-SQL_SCRIPT_NAME="USERS"
+SQL_SCRIPT_NAME="OSC_PROY"
+PRELIM_OUT_FILE="PRELIM_OUT_FILE"
 CSV_IN_FILE="../Datos/Libro2_V1.4.csv"
 
-SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
+# SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
+PRELIM_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${PRELIM_OUT_FILE}"".txt"
 ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
 
 # Se podria usar un array asociativo y luego hacer
@@ -419,10 +448,7 @@ TABLE_NAME_4="T_ESTADO_USER"
 
 NUM_COLS=26 # Number of expected columns to read from csv file
 
-genera_banner													#---->
-
 PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
-
 
 # Estado en										Estado en
 # Planilla 										Tabla
@@ -434,7 +460,6 @@ ESTADO_EN_PLANILLA[3]="Interno"				; ESTADO_EN_TABLA[3]="INTERNO"
 ESTADO_EN_PLANILLA[4]="De Baja"				; ESTADO_EN_TABLA[4]="DE_BAJA"		#(*) No sabemos si es correcto
 ESTADO_EN_PLANILLA[5]="Con Restricciones"	; ESTADO_EN_TABLA[5]="CON_RESTRICC"	#(*) No sabemos si es correcto
 ESTADO_EN_PLANILLA[6]="Puntual"				; ESTADO_EN_TABLA[6]="PUNTUAL"		#(*) No sabemos si es correcto
-
 
 
 # NOMBRE_COL	Nombre Col			   COL	Nombre Excel
@@ -476,6 +501,8 @@ NOMBRE_COL[34]="f_act_estado"
 # Columnas auxiliares para recibir datos parseados
 NOMBRE_COL[100]="especialidad"
 
+genera_banner	"ERROR_LOG"												#---->
+genera_banner	"PRELIM_OUT_FILE"										#---->
 
 # Por ahora cargamos una sola vez la fecha de actualizacion...
 
@@ -483,6 +510,7 @@ FECHA_ACTUALIZ="$(date  +\%Y-%m-%d\ %H:%M:%S)"  # Fecha de actualizacion
 
 # echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
 
+exit
 
 OLDIFS=$IFS
 IFS=,
@@ -496,30 +524,30 @@ do
 		continue
 	fi
 	
-	procesar_dni_cuil								#---->
+#	procesar_dni_cuil								#---->
 	
 	VAL_COL[34]=${FECHA_ACTUALIZ}
 	
-	if [ ${HAY_DNI} = "TRUE" ]
-	then
+#	if [ ${HAY_DNI} = "TRUE" ]
+#	then
  
         # procesar_telefono							#---->
 
-        procesar_email								#---->
+ #       procesar_email								#---->
  # Tabla T_VOLS1       
-        unset LISTA_COLUMNAS
-        LISTA_COLUMNAS=("${LISTA_COLUMNAS_1[@]}")
-        generar_insert ${TABLE_NAME_1}	>>${SQL_OUT_FILE}			#---->
+ #      unset LISTA_COLUMNAS
+ #      LISTA_COLUMNAS=("${LISTA_COLUMNAS_1[@]}")
+ #      generar_insert ${TABLE_NAME_1}	>>${SQL_OUT_FILE}			#---->
         
  # Tabla T_VOLS2       
-        unset LISTA_COLUMNAS
-        LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
-        generar_insert ${TABLE_NAME_2}	>>${SQL_OUT_FILE}			#---->
+ #       unset LISTA_COLUMNAS
+ #       LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
+ #       generar_insert ${TABLE_NAME_2}	>>${SQL_OUT_FILE}			#---->
         
 # Tabla T_ESPECIALIDAD_VOLS	
-        unset LISTA_COLUMNAS
-        LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
-		procesar_especialidad						#---->
+#        unset LISTA_COLUMNAS
+#        LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
+#		procesar_especialidad						#---->
 		
 		
 # Tabla T_ESTADO_VOLS
