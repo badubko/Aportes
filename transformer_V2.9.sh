@@ -126,12 +126,14 @@ fi
 												# precedido de blancos o no
 if [ $? = 0 ]
 then
-#	echo "Remover DNI y tomar los digitos"
+#	echo "Remover "DNI " y tomar los digitos"
 	HAY_DNI="TRUE"
 	DNI=${VAL_COL[21]^^}
 #	DNI=${DNI#DNI }
-    DNI=$(/bin/sed -r 's/DNI *//' <<< $DNI)
-    DNI=$(/bin/sed -r 's/DNI *.*//' <<< $DNI)
+    DNI=$(/bin/sed -r 's/^ *DNI *//' <<< $DNI)	# DNI al comienzo precedido y seguido
+												# de blancos
+    DNI=$(/bin/sed -r 's/ *DNI *.*//' <<< $DNI) # DNI repetido... al final de la linea
+												# Caso excepcional...
 	VAL_COL[30]=${DNI//./} # ESta es la columna DNI
 	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}" ; VAL_COL[21]=${CUIL}
 	return
