@@ -128,13 +128,13 @@ if [ $? = 0 ]
 then
 #	echo "Remover "DNI " y tomar los digitos"
 	HAY_DNI="TRUE"
-	DNI=${VAL_COL[21]^^}
+	DNI="${VAL_COL[21]^^}"
 #	DNI=${DNI#DNI }
-    DNI=$(/bin/sed -r 's/^ *DNI *//' <<< $DNI)	# DNI al comienzo precedido y seguido
+    DNI=$(/bin/sed -r 's/^ *DNI *//' <<< "${DNI}")	# DNI al comienzo precedido y seguido
 												# de blancos
-    DNI=$(/bin/sed -r 's/ *DNI *.*//' <<< $DNI) # DNI repetido... al final de la linea
+    DNI=$(/bin/sed -r 's/ *DNI *.*$//' <<< "${DNI}") # DNI repetido... al final de la linea
 												# Caso excepcional...
-	VAL_COL[30]=${DNI//./} # ESta es la columna DNI
+	VAL_COL[30]="${DNI//./}" 					# ESta es la columna DNI
 	HAY_CUIL="FALSE" ; 	CUIL="${CUIL_NO_DISPONIBLE}" ; VAL_COL[21]=${CUIL}
 	return
 fi
@@ -402,7 +402,7 @@ CUIL_NO_DISPONIBLE="N/D"
 EMAIL_NO_DISPONIBLE="N/D"
 
 SQL_SCRIPT_NAME="USERS"
-CSV_IN_FILE="../Datos/Libro2_V1.3.csv"
+CSV_IN_FILE="../Datos/Libro2_V1.4.csv"
 
 SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
 ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
