@@ -465,7 +465,7 @@ EMAIL_NO_DISPONIBLE="N/D"
 
 SQL_SCRIPT_NAME="OSC_PROY"
 PRELIM_OUT_FILE="PRELIM_OUT_FILE.txt"
-SORTED_OUT_FILE=${$PRELIM_OUT_FILE%.txt}".srt"
+SORTED_OUT_FILE=${PRELIM_OUT_FILE%.txt}".srt"
 CSV_IN_FILE="../Datos/Libro2_V1.4.csv"
 
 # SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}.sql"
@@ -608,3 +608,4 @@ done < ${CSV_IN_FILE}
 IFS=$OLDIFS
 	
 sort -u -t";" -k1 <${PRELIM_OUT_FILE} >${SORTED_OUT_FILE}
+sed -r '/I ;|V ;/!s/(.* *)(;)/\1I \2/' <../Datos/${SORTED_OUT_FILE} >../Datos/${SORTED_OUT_FILE}".cor" 
