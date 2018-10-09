@@ -31,8 +31,8 @@ NOM_ABREV=${COM}'..'${VERS}
 return
 }
 #-------------------------------------------------------------------------------
-
 genera_banner ()
+#-------------------------------------------------------------------------------
 {	
 	
 BANNER=$1
@@ -101,17 +101,17 @@ PRELIM_OUT_FILE )
 	  echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${PRELIM_OUT_FILE}
 	  linea_guiones 										>>${PRELIM_OUT_FILE}
 ;;
-
-*)
+* )
 	echo "Valor imposible de banner" "${BANNER}"
 	exit
 ;;
-  
-  
-return	
-}
+esac
 
+return
+}
+#-------------------------------------------------------------------------------
 validate_line()
+#-------------------------------------------------------------------------------
 {
 	
 if [ ${#VAL_COL[@]}  -ne ${NUM_COLS}     ]
@@ -212,6 +212,40 @@ do
 done
 
 IFS=${IFS_ANT}
+	
+}
+#------------------------------------------------------------------------------
+procesar_osc_proy ()
+#------------------------------------------------------------------------------
+{
+if [ ${#VAL_COL[6]} = 0 ]
+then
+	HAY_PROY=FALSE
+	return
+fi
+
+HAY_PROY=TRUE
+
+IFS_ANT=${IFS}
+
+VAL_COL[6]=${VAL_COL[6]//\#/}	 #  Eliminamos el caracter "#"
+
+IFS=';'  read -r -a OSC_PROY <<< ${VAL_COL[6]}
+
+let TOT_OSC_PROY=${#OSC_PROY[@]}-1
+
+let i=0
+
+while [ $i -le ${TOT_OSC_PROY} ]
+do
+	printf "%s ; %s\n" ${OSC_PROY[$i]} ${OSC_PROY[$i+1]}   >>${PRELIM_OUT_FILE}
+	let i+=2
+done
+
+IFS=${IFS_ANT}
+		
+	
+return
 	
 }
 
@@ -411,8 +445,9 @@ declare -a NOMBRE_COL
 declare -a NCM_Lineas 
 declare -a VAL_COL
 declare -a ESPECIALIDADES
+declare -a OSC_PROY
 declare -a TELEFONOS
-declare -i TOT_ESPEC TOT_TELS i cont TOT_ESTADOS
+declare -i TOT_ESPEC TOT_TELS i cont TOT_ESTADOS TOT_OSC_PROY
 
 declare -a LISTA_COLUMNAS
 declare -a LISTA_COLUMNAS_1=(30 0 1 22 32)      # Apellido Nombre DNI email1 email2
@@ -429,11 +464,13 @@ CUIL_NO_DISPONIBLE="N/D"
 EMAIL_NO_DISPONIBLE="N/D"
 
 SQL_SCRIPT_NAME="OSC_PROY"
-PRELIM_OUT_FILE="PRELIM_OUT_FILE"
+PRELIM_OUT_FILE="PRELIM_OUT_FILE.txt"
+SORTED_OUT_FILE=${$PRELIM_OUT_FILE%.txt}".srt"
 CSV_IN_FILE="../Datos/Libro2_V1.4.csv"
 
-# SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
-PRELIM_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${PRELIM_OUT_FILE}"".txt"
+# SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}.sql"
+PRELIM_OUT_FILE=../Datos/"${RUN_DATE_FILE}_${PRELIM_OUT_FILE}"
+SORTED_OUT_FILE=../Datos/"${RUN_DATE_FILE}_${SORTED_OUT_FILE/.txt/.srt}"
 ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
 
 # Se podria usar un array asociativo y luego hacer
@@ -470,7 +507,7 @@ NOMBRE_COL[2]="estado"				#	C	Estado
 NOMBRE_COL[3]="comentarios"			#	D	Comentarios
 NOMBRE_COL[4]="f_ingreso"			#	E	Fecha de ingreso
 NOMBRE_COL[5]="socio"				#	F	Socio
-NOMBRE_COL[6]=""					#	G	Proyectos	 N/A
+NOMBRE_COL[6]="proyectos"			#	G	Proyectos	 N/A
 NOMBRE_COL[7]=""					#	H	Area de trabajo del proyecto
 NOMBRE_COL[8]=""					#	I	Aptitud
 NOMBRE_COL[9]="array_especialidad"	#	J	Especialidad (parsear y a otra tabla)
@@ -510,7 +547,6 @@ FECHA_ACTUALIZ="$(date  +\%Y-%m-%d\ %H:%M:%S)"  # Fecha de actualizacion
 
 # echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
 
-exit
 
 OLDIFS=$IFS
 IFS=,
@@ -551,20 +587,24 @@ do
 		
 		
 # Tabla T_ESTADO_VOLS
-		estandarizar_estado							#---->
-		unset LISTA_COLUMNAS
-        LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
-        generar_insert ${TABLE_NAME_4}  	>>${SQL_OUT_FILE}		#---->
+#		estandarizar_estado							#---->
+#		unset LISTA_COLUMNAS
+#        LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
+#        generar_insert ${TABLE_NAME_4}  	>>${SQL_OUT_FILE}		#---->
 		
-		linea_guiones >>${SQL_OUT_FILE}											
-	else
-		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"  	>>${ERROR_LOG}
+#		linea_guiones >>${SQL_OUT_FILE}		
+
+	procesar_osc_proy
+	if [ ${HAY_PROY} = "FALSE" ]
+	then							
+		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_Proy"  	>>${ERROR_LOG}
 		printf "%s\n" "-- " 													>>${ERROR_LOG}
 	fi
 	
-	unset VAL_COL
-	
+#	unset VAL_COL
+
 done < ${CSV_IN_FILE}
 
 IFS=$OLDIFS
 	
+sort -u -t";" -k1 <${PRELIM_OUT_FILE} >${SORTED_OUT_FILE}
