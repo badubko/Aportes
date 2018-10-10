@@ -607,5 +607,5 @@ done < ${CSV_IN_FILE}
 
 IFS=$OLDIFS
 	
-sort -u -t";" -k1 <${PRELIM_OUT_FILE} >${SORTED_OUT_FILE}
-sed -r '/I ;|V ;/!s/(.* *)(;)/\1I \2/' <../Datos/${SORTED_OUT_FILE} >../Datos/${SORTED_OUT_FILE}".cor" 
+grep -v -e "--" <${PRELIM_OUT_FILE} | sort -u -t";" -k1 >${SORTED_OUT_FILE}
+sed -r '/I ;|V ;/!s/(.* *)(;)/\1I \2/' <../Datos/${SORTED_OUT_FILE} >../Datos/${SORTED_OUT_FILE%.srt}".cor" 

@@ -239,7 +239,7 @@ then
 	return
 fi
 
-# SI tiene un solo telefono agregar ";" al final 
+# SI tiene un solo mail agregar ";" al final 
 /bin/grep -q -e "; *$" <<< ${VAL_COL[22]}
 if [ $? != 0 ]
 then
