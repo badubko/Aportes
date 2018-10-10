@@ -250,7 +250,7 @@ done
 
 # Eliminar la ultima coma
 
-DNIS[${NUM_CORR_PROY}]+="{DNIS[${NUM_CORR_PROY}]%,}"
+# DNIS[${NUM_CORR_PROY}]+="${DNIS[${NUM_CORR_PROY}]%,}"
 
 IFS=${IFS_ANT}
 
@@ -581,9 +581,12 @@ do
 	
 	VAL_COL[34]=${FECHA_ACTUALIZ}
 	
-	if [ ${HAY_DNI} = "TRUE" ]
+	if [ ${HAY_DNI} = "FALSE" ]
 	then
- 
+		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"  	>>${ERROR_LOG}
+		printf "%s\n" "-- " 													>>${ERROR_LOG}
+		continue
+	else
 #        procesar_telefono							#---->
 
  #       procesar_email								#---->
@@ -611,13 +614,13 @@ do
 		
 #	linea_guiones >>${SQL_OUT_FILE}		
 
-	procesar_proy
+		procesar_proy
 	
-	if [ ${HAY_PROY} = "FALSE" ]
-	then							
-		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_Proy"  	>>${ERROR_LOG}
-		printf "%s\n" "-- " 													>>${ERROR_LOG}
-	fi
+		if [ ${HAY_PROY} = "FALSE" ]
+		then							
+			printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_Proy"  	>>${ERROR_LOG}
+			printf "%s\n" "-- " 													>>${ERROR_LOG}
+		fi
 	
 #	unset VAL_COL
 
@@ -628,10 +631,12 @@ IFS=$OLDIFS
 
 # INDICES_ORDENADOS="$(echo ${!LISTA_PROY[@]} | tr " " "\n" | sort )"
 
-INDICES_ORDENADOS="$(echo ${!DNIS[@]} | tr " " "\n" | sort )"
+INDICES_ORDENADOS="$(echo ${!DNIS[@]} | tr " " "\n" | sort -n )"
+
 for NUM_CORR_PROY in $(echo ${INDICES_ORDENADOS})
 do
-printf "%s ; %s\n" ${NUM_CORR_PROY} ${DNIS[${NUM_CORR_PROY}]}	>>${PRELIM_OUT_FILE}	
+	DNIS[${NUM_CORR_PROY}]="${DNIS[${NUM_CORR_PROY}]%,}"
+	printf "%s ; %s\n" ${NUM_CORR_PROY} ${DNIS[${NUM_CORR_PROY}]}	>>${PRELIM_OUT_FILE}	
 done
 
 # grep -v -e "--" <${PRELIM_OUT_FILE} | sort -u -t";" -k1 >${SORTED_OUT_FILE}
