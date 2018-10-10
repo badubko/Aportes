@@ -215,7 +215,7 @@ IFS=${IFS_ANT}
 	
 }
 #------------------------------------------------------------------------------
-procesar_osc_proy ()
+procesar_proy ()
 #------------------------------------------------------------------------------
 {
 if [ ${#VAL_COL[6]} = 0 ]
@@ -236,14 +236,25 @@ let TOT_OSC_PROY=${#OSC_PROY[@]}-1
 
 let i=0
 
+# Recorrer las duplas Nombre Proyecto ; NUM_CORR_PROYECTO
+
 while [ $i -le ${TOT_OSC_PROY} ]
 do
-	printf "%s ; %s\n" ${OSC_PROY[$i]} ${OSC_PROY[$i+1]}   >>${PRELIM_OUT_FILE}
+    NUM_CORR_PROY=${OSC_PROY[$i+1]}
+	DNIS[${NUM_CORR_PROY}]+="${VAL_COL[30]},"
+	LISTA_PROY[${NUM_CORR_PROY}]=${NUM_CORR_PROY}
+	
+#	printf "%s ; %s\n" ${OSC_PROY[$i]} ${OSC_PROY[$i+1]}   >>${PRELIM_OUT_FILE}
 	let i+=2
 done
 
+# Eliminar la ultima coma
+
+DNIS[${NUM_CORR_PROY}]+="{DNIS[${NUM_CORR_PROY}]%,}"
+
 IFS=${IFS_ANT}
-		
+
+
 	
 return
 	
@@ -457,6 +468,12 @@ declare -a LISTA_COLUMNAS_4=(30 2 34)			# DNI ESTADO f_act_estado
 
 declare -a ESTADO_EN_PLANILLA ESTADO_EN_TABLA	# Equivalencia de un nombre a otro
 
+declare -A DNIS									# Secuencia de DNIS que participan en un proy
+												# Indexada por NUM_CORR_PROY y separada por comas
+declare -A LISTA_PROY							# Es una truchada para tener el array ralo
+												# de proyectos 
+												
+
 run_data														#---->
 
 DNI_NO_DISPONIBLE=""
@@ -464,7 +481,7 @@ CUIL_NO_DISPONIBLE="N/D"
 EMAIL_NO_DISPONIBLE="N/D"
 
 SQL_SCRIPT_NAME="OSC_PROY"
-PRELIM_OUT_FILE="PRELIM_OUT_FILE.txt"
+PRELIM_OUT_FILE="PROY_OUT_FILE.txt"
 SORTED_OUT_FILE=${PRELIM_OUT_FILE%.txt}".srt"
 CSV_IN_FILE="../Datos/Libro2_V1.4.csv"
 
@@ -560,14 +577,14 @@ do
 		continue
 	fi
 	
-#	procesar_dni_cuil								#---->
+	procesar_dni_cuil								#---->
 	
 	VAL_COL[34]=${FECHA_ACTUALIZ}
 	
-#	if [ ${HAY_DNI} = "TRUE" ]
-#	then
+	if [ ${HAY_DNI} = "TRUE" ]
+	then
  
-        # procesar_telefono							#---->
+#        procesar_telefono							#---->
 
  #       procesar_email								#---->
  # Tabla T_VOLS1       
@@ -592,9 +609,10 @@ do
 #        LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
 #        generar_insert ${TABLE_NAME_4}  	>>${SQL_OUT_FILE}		#---->
 		
-#		linea_guiones >>${SQL_OUT_FILE}		
+#	linea_guiones >>${SQL_OUT_FILE}		
 
-	procesar_osc_proy
+	procesar_proy
+	
 	if [ ${HAY_PROY} = "FALSE" ]
 	then							
 		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_Proy"  	>>${ERROR_LOG}
@@ -603,9 +621,20 @@ do
 	
 #	unset VAL_COL
 
+	fi
 done < ${CSV_IN_FILE}
 
 IFS=$OLDIFS
-	
-grep -v -e "--" <${PRELIM_OUT_FILE} | sort -u -t";" -k1 >${SORTED_OUT_FILE}
-sed -r '/I ;|V ;/!s/(.* *)(;)/\1I \2/' <../Datos/${SORTED_OUT_FILE} >../Datos/${SORTED_OUT_FILE%.srt}".cor" 
+
+# INDICES_ORDENADOS="$(echo ${!LISTA_PROY[@]} | tr " " "\n" | sort )"
+
+INDICES_ORDENADOS="$(echo ${!DNIS[@]} | tr " " "\n" | sort )"
+for NUM_CORR_PROY in $(echo ${INDICES_ORDENADOS})
+do
+printf "%s ; %s\n" ${NUM_CORR_PROY} ${DNIS[${NUM_CORR_PROY}]}	>>${PRELIM_OUT_FILE}	
+done
+
+# grep -v -e "--" <${PRELIM_OUT_FILE} | sort -u -t";" -k1 >${SORTED_OUT_FILE}
+# sed -r '/I ;|V ;/!s/(.* *)(;)/\1I \2/' <../Datos/${SORTED_OUT_FILE} >../Datos/${SORTED_OUT_FILE%.srt}".cor" 
+
+exit
