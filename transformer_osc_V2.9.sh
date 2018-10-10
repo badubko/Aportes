@@ -607,5 +607,7 @@ done < ${CSV_IN_FILE}
 
 IFS=$OLDIFS
 	
-grep -v -e "--" <${PRELIM_OUT_FILE} | sort -u -t";" -k1 >${SORTED_OUT_FILE}
-sed -r '/I ;|V ;/!s/(.* *)(;)/\1I \2/' <../Datos/${SORTED_OUT_FILE} >../Datos/${SORTED_OUT_FILE%.srt}".cor" 
+# Hacemos una prueba sin eliminar los duplicados
+# /bin/grep -v -e "--" <${PRELIM_OUT_FILE} | /usr/bin/sort -u -t";" -k1 >${SORTED_OUT_FILE}
+/bin/grep -v -e "--" <${PRELIM_OUT_FILE} | /usr/bin/sort -t";" -k1 >${SORTED_OUT_FILE}
+/bin/sed -r '/I ;|V ;/!s/(.* *)(;)/\1I \2/' <../Datos/${SORTED_OUT_FILE} >../Datos/${SORTED_OUT_FILE%.srt}".cor" 
