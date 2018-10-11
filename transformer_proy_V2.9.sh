@@ -241,8 +241,8 @@ let i=0
 while [ $i -le ${TOT_OSC_PROY} ]
 do
     NUM_CORR_PROY=${OSC_PROY[$i+1]}
-	DNIS[${NUM_CORR_PROY}]+="${VAL_COL[30]},"
-	LISTA_PROY[${NUM_CORR_PROY}]=${NUM_CORR_PROY}
+	DNIS[${NUM_CORR_PROY}]+="${VAL_COL[30]}"","
+# 	LISTA_PROY[${NUM_CORR_PROY}]=${NUM_CORR_PROY}
 	
 #	printf "%s ; %s\n" ${OSC_PROY[$i]} ${OSC_PROY[$i+1]}   >>${PRELIM_OUT_FILE}
 	let i+=2
@@ -577,9 +577,10 @@ do
 		continue
 	fi
 	
+	VAL_COL[34]=${FECHA_ACTUALIZ}
 	procesar_dni_cuil								#---->
 	
-	VAL_COL[34]=${FECHA_ACTUALIZ}
+	
 	
 	if [ ${HAY_DNI} = "FALSE" ]
 	then
