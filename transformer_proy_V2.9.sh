@@ -669,6 +669,7 @@ do
 	printf "%s ; %s\n" ${dni} ${PROJ_BY_DNI[${dni}]}	>>${PRELIM_OUT_FILE}	
 done
 
+
 exit
 
 
