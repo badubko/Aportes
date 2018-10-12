@@ -228,8 +228,6 @@ HAY_PROY=TRUE
 
 IFS_ANT=${IFS}
 
-# COL 6 contiene los pares Nombre proyecto, Num_corr_proy
-
 VAL_COL[6]=${VAL_COL[6]//\#/}	 #  Eliminamos el caracter "#"
 
 IFS=';'  read -r -a OSC_PROY <<< ${VAL_COL[6]}
@@ -242,10 +240,9 @@ let i=0
 
 while [ $i -le ${TOT_OSC_PROY} ]
 do
-    NUM_CORR_PROY=${OSC_PROY[$i+1]}						# Proyecto en que participo este VOL
-	
-	DNI_BY_PROJ[${NUM_CORR_PROY}]+="${VAL_COL[30]}"","	# Sumamos un DNI a ese proy
-    PROJ_BY_DNI[${VAL_COL[30]}]+="${NUM_CORR_PROY}"","  # Sumamos un Proy a ese DNI
+    NUM_CORR_PROY=${OSC_PROY[$i+1]}
+	DNIS[${NUM_CORR_PROY}]+="${VAL_COL[30]}"","
+# 	LISTA_PROY[${NUM_CORR_PROY}]=${NUM_CORR_PROY}
 	
 #	printf "%s ; %s\n" ${OSC_PROY[$i]} ${OSC_PROY[$i+1]}   >>${PRELIM_OUT_FILE}
 	let i+=2
@@ -253,7 +250,7 @@ done
 
 # Eliminar la ultima coma
 
-# DNIS[${NUM_CORR_PROY}]+="${DNIS[${NUM_CORR_PROY}]%,}"
+# DNIS[${NUM_CORR_PROY}]="${DNIS[${NUM_CORR_PROY}]%,}"
 
 IFS=${IFS_ANT}
 
@@ -475,11 +472,7 @@ declare -A DNIS									# Secuencia de DNIS que participan en un proy
 												# Indexada por NUM_CORR_PROY y separada por comas
 declare -A LISTA_PROY							# Es una truchada para tener el array ralo
 												# de proyectos 
-declare -A DNI_BY_PROJ							# Lista de DNIs que participaron en un proy
-												# indice ${PROJ} (NUM_CORR_PROY)
-												# 
-declare -A PROJ_BY_DNI						    # Lista de Projectos asociados a un DNI
-												# Indice ${DNI} 
+												
 
 run_data														#---->
 
@@ -497,7 +490,6 @@ PRELIM_OUT_FILE=../Datos/"${RUN_DATE_FILE}_${PRELIM_OUT_FILE}"
 SORTED_OUT_FILE=../Datos/"${RUN_DATE_FILE}_${SORTED_OUT_FILE/.txt/.srt}"
 ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
 
-#---------------------------------------------------------------------------
 # Se podria usar un array asociativo y luego hacer
 # TABLE_NAME[T_USERS1]="T_USERS1"
 # Asi seria mas facil identificar a que tabla nos referimos sin tener que 
@@ -511,7 +503,7 @@ TABLE_NAME_4="T_ESTADO_USER"
 NUM_COLS=26 # Number of expected columns to read from csv file
 
 PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
-#---------------------------------------------------------------------------
+
 # Estado en										Estado en
 # Planilla 										Tabla
 #---------------------------------------------------------------------------
@@ -523,7 +515,7 @@ ESTADO_EN_PLANILLA[4]="De Baja"				; ESTADO_EN_TABLA[4]="DE_BAJA"		#(*) No sabem
 ESTADO_EN_PLANILLA[5]="Con Restricciones"	; ESTADO_EN_TABLA[5]="CON_RESTRICC"	#(*) No sabemos si es correcto
 ESTADO_EN_PLANILLA[6]="Puntual"				; ESTADO_EN_TABLA[6]="PUNTUAL"		#(*) No sabemos si es correcto
 
-#---------------------------------------------------------------------------
+
 # NOMBRE_COL	Nombre Col			   COL	Nombre Excel
 #		[Indice]
 NOMBRE_COL[0]="apellido"			#	A	Apellido
@@ -563,10 +555,8 @@ NOMBRE_COL[34]="f_act_estado"
 # Columnas auxiliares para recibir datos parseados
 NOMBRE_COL[100]="especialidad"
 
-#---------------------------------------------------------------------------
-#---------------------------------------------------------------------------
 genera_banner	"ERROR_LOG"												#---->
-									#---->
+genera_banner	"PRELIM_OUT_FILE"										#---->
 
 # Por ahora cargamos una sola vez la fecha de actualizacion...
 
@@ -631,7 +621,6 @@ do
 		then							
 			printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_Proy"  	>>${ERROR_LOG}
 			printf "%s\n" "-- " 													>>${ERROR_LOG}
-			continue
 		fi
 	
 #	unset VAL_COL
@@ -641,32 +630,17 @@ done < ${CSV_IN_FILE}
 
 IFS=$OLDIFS
 
-genera_banner	"PRELIM_OUT_FILE"								#---->	
-
 # INDICES_ORDENADOS="$(echo ${!LISTA_PROY[@]} | tr " " "\n" | sort )"
 
-INDICES_ORDENADOS="$(echo ${!DNI_BY_PROJ[@]} | tr " " "\n" | sort -n )"
+INDICES_ORDENADOS="$(echo ${!DNIS[@]} | tr " " "\n" | sort -n )"
 
-for proj in $(echo ${INDICES_ORDENADOS})
+for NUM_CORR_PROY in $(echo ${INDICES_ORDENADOS})
 do
-    DNI_BY_PROJ[${proj}]=${DNI_BY_PROJ[${proj}]%,}			# Eliminar la ultima coma
-    
-	printf "%s ; %s\n" ${proj} ${DNI_BY_PROJ[${proj}]}	>>${PRELIM_OUT_FILE}	
+	DNIS[${NUM_CORR_PROY}]="${DNIS[${NUM_CORR_PROY}]%,}"
+	printf "%s ; %s\n" ${NUM_CORR_PROY} ${DNIS[${NUM_CORR_PROY}]}	>>${PRELIM_OUT_FILE}	
 done
-
-linea_guiones 							>>${PRELIM_OUT_FILE}  #---->
-linea_guiones 							>>${PRELIM_OUT_FILE}  #---->
-
-INDICES_ORDENADOS="$(echo ${!PROJ_BY_DNI[@]} | tr " " "\n" | sort -n )"
-
-for dni in $(echo ${INDICES_ORDENADOS})
-do
-	PROJ_BY_DNI[${dni}]=${PROJ_BY_DNI[${dni}]%,}			# Eliminar la ultima coma
-	printf "%s ; %s\n" ${dni} ${PROJ_BY_DNI[${dni}]}	>>${PRELIM_OUT_FILE}	
-done
-
-exit
-
 
 # grep -v -e "--" <${PRELIM_OUT_FILE} | sort -u -t";" -k1 >${SORTED_OUT_FILE}
 # sed -r '/I ;|V ;/!s/(.* *)(;)/\1I \2/' <../Datos/${SORTED_OUT_FILE} >../Datos/${SORTED_OUT_FILE%.srt}".cor" 
+
+exit
