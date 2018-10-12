@@ -230,6 +230,8 @@ IFS_ANT=${IFS}
 
 # COL 6 contiene los pares Nombre proyecto, Num_corr_proy
 
+unset OSC_PROY
+
 VAL_COL[6]=${VAL_COL[6]//\#/}	 #  Eliminamos el caracter "#"
 
 IFS=';'  read -r -a OSC_PROY <<< ${VAL_COL[6]}
@@ -646,6 +648,7 @@ genera_banner	"PRELIM_OUT_FILE"								#---->
 # INDICES_ORDENADOS="$(echo ${!LISTA_PROY[@]} | tr " " "\n" | sort )"
 
 INDICES_ORDENADOS="$(echo ${!DNI_BY_PROJ[@]} | tr " " "\n" | sort -n )"
+# INDICES_ORDENADOS="${!DNI_BY_PROJ[@]}"
 
 for proj in $(echo ${INDICES_ORDENADOS})
 do
@@ -658,6 +661,7 @@ linea_guiones 							>>${PRELIM_OUT_FILE}  #---->
 linea_guiones 							>>${PRELIM_OUT_FILE}  #---->
 
 INDICES_ORDENADOS="$(echo ${!PROJ_BY_DNI[@]} | tr " " "\n" | sort -n )"
+# INDICES_ORDENADOS="${!PROJ_BY_DNI[@]}"
 
 for dni in $(echo ${INDICES_ORDENADOS})
 do
