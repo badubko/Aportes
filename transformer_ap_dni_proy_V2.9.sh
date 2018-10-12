@@ -492,7 +492,7 @@ CUIL_NO_DISPONIBLE="N/D"
 EMAIL_NO_DISPONIBLE="N/D"
 
 SQL_SCRIPT_NAME="OSC_PROY"
-PRELIM_OUT_FILE="PROY_OUT_FILE.txt"
+PRELIM_OUT_FILE="AP_DNI_PROY.txt"
 SORTED_OUT_FILE=${PRELIM_OUT_FILE%.txt}".srt"
 CSV_IN_FILE="../Datos/Libro2_V1.4.csv"
 
@@ -636,12 +636,19 @@ do
 			printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_Proy"  	>>${ERROR_LOG}
 			printf "%s\n" "-- " 													>>${ERROR_LOG}
 			continue
+		else
+			printf "%8s ; %-17s ; %s \n"  "${VAL_COL[30]}" "${VAL_COL[0]}" "${VAL_COL[6]}" >>${PRELIM_OUT_FILE}
 		fi
 	
-#	unset VAL_COL
+	unset VAL_COL
 
 	fi
 done < ${CSV_IN_FILE}
+
+							#---->	
+sort -n -t";" -k1 <${PRELIM_OUT_FILE}  >${SORTED_OUT_FILE}
+
+exit
 
 IFS=$OLDIFS
 
