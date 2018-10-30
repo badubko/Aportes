@@ -102,6 +102,14 @@ then
 		fi
 	fi
 else
+    NUM_COL=0  						# Indice para recorrer las columnas
+									# Eliminando caracteres espureos
+	while [ ${NUM_COL} -le ${NUM_COLS} ]
+	do
+	  VAL_COL[${NUM_COL}]=${VAL_COL[${NUM_COL}]//\'/ }
+	  let NUM_COL++
+	done
+    
 	LINE_IS_VALID="TRUE"
 fi	
 return
@@ -385,7 +393,7 @@ declare -a NCM_Lineas
 declare -a VAL_COL
 declare -a ESPECIALIDADES
 declare -a TELEFONOS
-declare -i TOT_ESPEC TOT_TELS i cont TOT_ESTADOS
+declare -i TOT_ESPEC TOT_TELS i cont TOT_ESTADOS NUM_COL
 
 declare -a LISTA_COLUMNAS
 declare -a LISTA_COLUMNAS_1=(30 0 1 22 32)      # Apellido Nombre DNI email1 email2
