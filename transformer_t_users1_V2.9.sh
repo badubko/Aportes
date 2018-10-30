@@ -511,10 +511,10 @@ do
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_1[@]}")
         generar_insert ${TABLE_NAME_1}	>>${SQL_OUT_FILE}			#---->
         
- ## Tabla T_VOLS2       
-        #unset LISTA_COLUMNAS
-        #LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
-        #generar_insert ${TABLE_NAME_2}	>>${SQL_OUT_FILE}			#---->
+ # Tabla T_VOLS2       
+        unset LISTA_COLUMNAS
+        LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
+        generar_insert ${TABLE_NAME_2}	>>${SQL_OUT_FILE}			#---->
         
 ## Tabla T_ESPECIALIDAD_VOLS	
         #unset LISTA_COLUMNAS
