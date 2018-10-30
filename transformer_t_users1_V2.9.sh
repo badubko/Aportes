@@ -6,7 +6,7 @@
 
 linea_guiones ()
 {
-echo "----------------------------------------------------------------"  
+echo "-- --------------------------------------------------------------"  
 }
 
 
@@ -412,10 +412,10 @@ ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
 # Asi seria mas facil identificar a que tabla nos referimos sin tener que 
 # regresar aca...
 
-TABLE_NAME_1="T_USERS1"
-TABLE_NAME_2="T_USERS2"
-TABLE_NAME_3="T_ESPECIALIDADES"
-TABLE_NAME_4="T_ESTADO_USER"
+TABLE_NAME_1="t_users1"
+TABLE_NAME_2="t_users2"
+TABLE_NAME_3="t_especialidades"
+TABLE_NAME_4="t_estado_user"
 
 NUM_COLS=26 # Number of expected columns to read from csv file
 
