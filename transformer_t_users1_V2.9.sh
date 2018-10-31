@@ -399,7 +399,8 @@ declare -a LISTA_COLUMNAS
 declare -a LISTA_COLUMNAS_1=(30 0 1 22 32)      # Apellido Nombre DNI email1 email2
 declare -a LISTA_COLUMNAS_2=(30 21)				#DNI CUIL
 declare -a LISTA_COLUMNAS_3=(30 100)			# DNI ESPECIALIDAD
-declare -a LISTA_COLUMNAS_4=(30 2 34)			# DNI ESTADO f_act_estado
+# declare -a LISTA_COLUMNAS_4=(30 2 34)			# DNI ESTADO f_act_estado
+declare -a LISTA_COLUMNAS_4=(30 2)			# DNI ESTADO f_act_estado
 
 declare -a ESTADO_EN_PLANILLA ESTADO_EN_TABLA	# Equivalencia de un nombre a otro
 
@@ -442,7 +443,7 @@ ESTADO_EN_PLANILLA[3]="Interno"				; ESTADO_EN_TABLA[3]="Interno"
 ESTADO_EN_PLANILLA[4]="De Baja"				; ESTADO_EN_TABLA[4]="De_baja"		#(*) No sabemos si es correcto
 ESTADO_EN_PLANILLA[5]="Con Restricciones"	; ESTADO_EN_TABLA[5]="Con_Restricc"	#(*) No sabemos si es correcto
 ESTADO_EN_PLANILLA[6]="Puntual"				; ESTADO_EN_TABLA[6]="Puntual"		#(*) No sabemos si es correcto
-ESTADO_EN_PLANILLA[6]="Desconocido"			; ESTADO_EN_TABLA[6]="Desconoc"	
+ESTADO_EN_PLANILLA[7]="Desconocido"			; ESTADO_EN_TABLA[7]="Desconoc"	
 
 
 # NOMBRE_COL	Nombre Col			   COL	Nombre Excel
