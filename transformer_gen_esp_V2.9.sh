@@ -401,6 +401,7 @@ declare -a LISTA_COLUMNAS_1=(30 0 1 22 32)      # Apellido Nombre DNI email1 ema
 declare -a LISTA_COLUMNAS_2=(30 21)				#DNI CUIL
 declare -a LISTA_COLUMNAS_3=(30 100)			# DNI ESPECIALIDAD
 declare -a LISTA_COLUMNAS_4=(30 2 34)			# DNI ESTADO f_act_estado
+declare -a LISTA_COLUMNAS_5=(100)				# Especialidad
 
 declare -a ESTADO_EN_PLANILLA ESTADO_EN_TABLA	# Equivalencia de un nombre a otro
 
@@ -427,8 +428,9 @@ ESPECIALIDADES_FILE_SRT=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sr
 
 TABLE_NAME_1="t_users1"
 TABLE_NAME_2="t_users2"
-TABLE_NAME_3="t_especialidades"
+TABLE_NAME_3="t_especialidad_user"
 TABLE_NAME_4="t_estado_user"
+TABLE_NAME_5="t_especialidades"
 
 NUM_COLS=26 # Number of expected columns to read from csv file
 
@@ -540,7 +542,7 @@ do
         #LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
         #generar_insert ${TABLE_NAME_4}  	>>${SQL_OUT_FILE}		#---->
 		
-		linea_guiones >>${SQL_OUT_FILE}											
+		# linea_guiones >>${SQL_OUT_FILE}											
 	else
 		printf "%s %s %s %s \n" "--"${VAL_COL[0]} ${VAL_COL[1]} "-->SIN_DNI"  	>>${ERROR_LOG}
 		printf "%s\n" "-- " 													>>${ERROR_LOG}
@@ -554,3 +556,13 @@ IFS=$OLDIFS
 
 /bin/grep -v -e "^$" < ${ESPECIALIDADES_FILE} | sort -u  >${ESPECIALIDADES_FILE_SRT}
 	
+unset LISTA_COLUMNAS
+LISTA_COLUMNAS=("${LISTA_COLUMNAS_5[@]}")	
+
+while read VAL_COL[100]
+do
+ 
+  generar_insert ${TABLE_NAME_5}  	>>${SQL_OUT_FILE}
+#  printf "%s %s \n" "Insertar"  ${ESP}
+
+done <${ESPECIALIDADES_FILE_SRT}
