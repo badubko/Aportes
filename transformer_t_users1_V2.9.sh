@@ -422,7 +422,7 @@ ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
 
 TABLE_NAME_1="t_users1"
 TABLE_NAME_2="t_users2"
-TABLE_NAME_3="t_especialidades"
+TABLE_NAME_3="t_especialidad_user"
 TABLE_NAME_4="t_estado_user"
 
 NUM_COLS=26 # Number of expected columns to read from csv file
@@ -524,10 +524,10 @@ do
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
         generar_insert ${TABLE_NAME_2}	>>${SQL_OUT_FILE}			#---->
         
-## Tabla T_ESPECIALIDAD_VOLS	
-        #unset LISTA_COLUMNAS
-        #LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
-		#procesar_especialidad						#---->
+# Tabla T_ESPECIALIDAD_VOLS	
+        unset LISTA_COLUMNAS
+        LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
+		procesar_especialidad						#---->
 		
 		
 ## Tabla T_ESTADO_VOLS
