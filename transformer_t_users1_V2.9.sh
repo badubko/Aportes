@@ -431,18 +431,18 @@ genera_banner													#---->
 
 PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
 
-
+# 'Asignado','Disponible','ND_Temp','De_Baja','Con_Restricc','Interno','Puntual','Desconoc')
 # Estado en										Estado en
 # Planilla 										Tabla
 #---------------------------------------------------------------------------
-ESTADO_EN_PLANILLA[0]="Asignado"			; ESTADO_EN_TABLA[0]="ASIGNADO"		
-ESTADO_EN_PLANILLA[1]="Disponible"			; ESTADO_EN_TABLA[1]="DISPONIBLE"	
-ESTADO_EN_PLANILLA[2]="No Disponible Temp."	; ESTADO_EN_TABLA[2]="NO_DISP_TEMP"
-ESTADO_EN_PLANILLA[3]="Interno"				; ESTADO_EN_TABLA[3]="INTERNO"
-ESTADO_EN_PLANILLA[4]="De Baja"				; ESTADO_EN_TABLA[4]="DE_BAJA"		#(*) No sabemos si es correcto
-ESTADO_EN_PLANILLA[5]="Con Restricciones"	; ESTADO_EN_TABLA[5]="CON_RESTRICC"	#(*) No sabemos si es correcto
-ESTADO_EN_PLANILLA[6]="Puntual"				; ESTADO_EN_TABLA[6]="PUNTUAL"		#(*) No sabemos si es correcto
-
+ESTADO_EN_PLANILLA[0]="Asignado"			; ESTADO_EN_TABLA[0]="Asignado"		
+ESTADO_EN_PLANILLA[1]="Disponible"			; ESTADO_EN_TABLA[1]="Disponible"	
+ESTADO_EN_PLANILLA[2]="No Disponible Temp."	; ESTADO_EN_TABLA[2]="ND_Temp"
+ESTADO_EN_PLANILLA[3]="Interno"				; ESTADO_EN_TABLA[3]="Interno"
+ESTADO_EN_PLANILLA[4]="De Baja"				; ESTADO_EN_TABLA[4]="De_baja"		#(*) No sabemos si es correcto
+ESTADO_EN_PLANILLA[5]="Con Restricciones"	; ESTADO_EN_TABLA[5]="Con_Restricc"	#(*) No sabemos si es correcto
+ESTADO_EN_PLANILLA[6]="Puntual"				; ESTADO_EN_TABLA[6]="Puntual"		#(*) No sabemos si es correcto
+ESTADO_EN_PLANILLA[6]="Desconocido"			; ESTADO_EN_TABLA[6]="Desconoc"	
 
 
 # NOMBRE_COL	Nombre Col			   COL	Nombre Excel
