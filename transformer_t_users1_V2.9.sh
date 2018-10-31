@@ -531,11 +531,11 @@ do
 		procesar_especialidad						#---->
 		
 		
-## Tabla T_ESTADO_VOLS
-		#estandarizar_estado							#---->
-		#unset LISTA_COLUMNAS
-        #LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
-        #generar_insert ${TABLE_NAME_4}  	>>${SQL_OUT_FILE}		#---->
+# Tabla T_ESTADO_VOLS
+		estandarizar_estado							#---->
+		unset LISTA_COLUMNAS
+        LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
+        generar_insert ${TABLE_NAME_4}  	>>${SQL_OUT_FILE}		#---->
 		
 		linea_guiones >>${SQL_OUT_FILE}											
 	else
