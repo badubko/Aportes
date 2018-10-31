@@ -414,7 +414,7 @@ ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
 
 TABLE_NAME_1="t_users1"
 TABLE_NAME_2="t_users2"
-TABLE_NAME_3="t_especialidades"
+TABLE_NAME_3="t_especialidad_user"
 TABLE_NAME_4="t_estado_user"
 
 NUM_COLS=26 # Number of expected columns to read from csv file
