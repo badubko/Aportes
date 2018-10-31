@@ -166,7 +166,7 @@ fi
 
 }
 #------------------------------------------------------------------------------
-procesar_especialidad ()
+generar_t_especialidad ()
 #------------------------------------------------------------------------------
 {
 if [ ${#VAL_COL[9]} = 0 ]
@@ -416,8 +416,9 @@ CSV_IN_FILE="../Datos/Libro2_V1.4.csv"
 SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
 ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
 ESPECIALIDADES_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".txt"
+ESPECIALIDADES_FILE_SRT=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".srt"
 
-cat </dev/null > ${ESPECIALIDADES_FILE}						# Desprolijo !!!! Choto !!!!
+ > ${ESPECIALIDADES_FILE}						# Desprolijo !!!! Choto !!!!
 
 # Se podria usar un array asociativo y luego hacer
 # TABLE_NAME[T_USERS1]="T_USERS1"
@@ -531,7 +532,7 @@ do
 # Tabla T_ESPECIALIDAD_VOLS	
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
-		procesar_especialidad						#---->
+		generar_t_especialidad						#---->
 				
 ## Tabla T_ESTADO_VOLS
 		#estandarizar_estado							#---->
@@ -550,4 +551,6 @@ do
 done < ${CSV_IN_FILE}
 
 IFS=$OLDIFS
+
+/bin/grep -v -e "^$" < ${ESPECIALIDADES_FILE} | sort -u  >${ESPECIALIDADES_FILE_SRT}
 	
