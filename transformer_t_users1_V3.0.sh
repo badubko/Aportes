@@ -103,7 +103,39 @@ done
 IFS=${IFS_ANT}
 	
 }
+#------------------------------------------------------------------------------
+procesar_especialidad_set ()
+#------------------------------------------------------------------------------
+{
+if [ ${#VAL_COL[9]} = 0 ]
+then
+	HAY_ESPEC=FALSE
+	return
+fi
 
+IFS_ANT=${IFS}
+
+VAL_COL[9]=${VAL_COL[9]//\#/}	 #  Eliminamos el caracter "#"
+VAL_COL[9]=${VAL_COL[9]//\;/,}	 # 
+VAL_COL[100]=${VAL_COL[9]}
+
+
+#IFS=';'  read -r -a ESPECIALIDADES <<< ${VAL_COL[9]}
+
+#let TOT_ESPEC=${#ESPECIALIDADES[@]}-1
+
+#let i=0
+
+#while [ $i -le ${TOT_ESPEC} ]
+#do
+    #VAL_COL[100]=${ESPECIALIDADES[$i]}
+	#generar_insert ${TABLE_NAME_3}  >>${SQL_OUT_FILE}		#---->>
+	#let i++
+#done
+
+IFS=${IFS_ANT}
+	
+}
 #------------------------------------------------------------------------------
 procesar_telefono()
 #------------------------------------------------------------------------------
@@ -305,7 +337,7 @@ declare -i TOT_ESPEC TOT_TELS i cont TOT_ESTADOS NUM_COL
 
 declare -a LISTA_COLUMNAS
 declare -a LISTA_COLUMNAS_1=(30 0 1 22 32)      # Apellido Nombre DNI email1 email2
-declare -a LISTA_COLUMNAS_2=(30 21)				#DNI CUIL
+declare -a LISTA_COLUMNAS_2=(30 21 100)			# DNI CUIL ESPECIALIDADES
 declare -a LISTA_COLUMNAS_3=(30 100)			# DNI ESPECIALIDAD
 # declare -a LISTA_COLUMNAS_4=(30 2 34)			# DNI ESTADO f_act_estado
 declare -a LISTA_COLUMNAS_4=(30 2)			# DNI ESTADO f_act_estado
@@ -439,12 +471,13 @@ do
  # Tabla T_VOLS2       
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
+        procesar_especialidad_set
         generar_insert ${TABLE_NAME_2}	>>${SQL_OUT_FILE}				#---->
         
-# Tabla T_ESPECIALIDAD_VOLS	
-        unset LISTA_COLUMNAS
-        LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
-		procesar_especialidad											#---->
+## Tabla T_ESPECIALIDAD_VOLS	
+        #unset LISTA_COLUMNAS
+        #LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
+													#---->
 		
 		
 # Tabla T_ESTADO_VOLS
