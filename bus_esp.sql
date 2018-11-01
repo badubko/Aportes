@@ -9,11 +9,9 @@ INNER JOIN
 --   t_especialidad_user esp ON u1.dni = esp.dni
    t_especialidad_user esp USING (dni)
 WHERE
-	especialidad = "Sistemas" ;
-	
--- AND especialidad = "Procesos" ;
-
--- ORDER BY especialidad
-;
+	especialidad = "Sistemas"  OR especialidad = "Procesos" 
 -- ORDER BY
--- e.dni ;
+-- esp.dni
+ ;
+
+
