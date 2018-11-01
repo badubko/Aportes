@@ -6,6 +6,8 @@ DROP SCHEMA IF EXISTS aportesV16;
 CREATE SCHEMA aportesV16;
 USE aportesV16;
 
+-- ESTE MODELO NO SIRVE
+quit
 
 --
 -- Table structure for table `users1`

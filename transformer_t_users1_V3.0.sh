@@ -441,6 +441,9 @@ FECHA_ACTUALIZ="$(date  +\%Y-%m-%d\ %H:%M:%S)"  # Fecha de actualizacion
 
 #-------------------------------------------------------------------------------
 
+echo "Este modelo no sirve "
+exit
+
 OLDIFS=$IFS
 IFS=,
 
