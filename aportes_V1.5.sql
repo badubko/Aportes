@@ -61,7 +61,7 @@ CREATE TABLE t_estado_user (
   dni INT UNSIGNED NOT NULL,
   estado ENUM ('Asignado','Disponible','ND_Temp','De_Baja','Con_Restricc','Interno','Puntual','Desconoc') DEFAULT 'Desconoc',
   last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  comentarios VARCHAR (256),   
+  consideraciones VARCHAR (256) DEFAULT NULL,   
   KEY idx_fk_dni (dni),
   CONSTRAINT fk_estado_dni FOREIGN KEY (dni) REFERENCES t_users1 (dni) ON DELETE RESTRICT ON UPDATE CASCADE
   )ENGINE=InnoDB DEFAULT CHARSET=utf8;
