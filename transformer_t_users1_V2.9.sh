@@ -321,8 +321,12 @@ EMAIL_NO_DISPONIBLE="N/D"
 SQL_SCRIPT_NAME="USERS"
 CSV_IN_FILE="../Datos/Libro2_V1.4.csv"
 
-SQL_OUT_FILE=../SQL_Scripts/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
-ERROR_LOG=../Errores/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
+SQL_INS_DATOS_DIR="SQL_Ins_Datos"
+SQL_INS_T_FIJAS_DIR="SQL_Ins_T_fijas"
+ERROR_DIR="Errores"
+
+SQL_OUT_FILE=../${SQL_INS_DATOS_DIR}/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}"".sql"
+ERROR_LOG=../${ERROR_DIR}/"${RUN_DATE_FILE}_${SQL_SCRIPT_NAME}_ERR"".log"
 
 # Se podria usar un array asociativo y luego hacer
 # TABLE_NAME[T_USERS1]="T_USERS1"

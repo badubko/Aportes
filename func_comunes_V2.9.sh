@@ -68,10 +68,10 @@ SQL_OUT_FILE )
 ;;
 #------------------------------------------------------------------------------
 ERROR_LOG )
-	
-	if [  -d "${ERROR_LOG}" ]
+	${0%/*}
+	if [ ! -d "${ERROR_LOG%/*}" ]
 	then
-	  echo "${NOM_ABREV}: No se puede generar: ${ERROR_LOG} Es un directorio"
+	  echo "${NOM_ABREV}: No se puede generar: ${ERROR_LOG} No existe el directorio"
 	  exit
 	fi
 
