@@ -6,6 +6,7 @@
 #------------------------------------------------------------------------------
 
 INSTALL_DIR=${0%/*}
+FUNC_COM="func_comunes_V2.9.sh"
 
 if [ ! -d  ${INSTALL_DIR} ]
 then
@@ -14,10 +15,14 @@ then
    exit
 fi
 
-source ${INSTALL_DIR}/func_comunes_V2.0
+if [ ! -f  ${INSTALL_DIR}/${FUNC_COM} ]
+then
+   echo ${INSTALL_DIR}/${FUNC_COM} " No existe!"
 
+   exit
+fi
 
-
+source ${INSTALL_DIR}/${FUNC_COM}
 
 #------------------------------------------------------------------------------
 procesar_dni_cuil()
