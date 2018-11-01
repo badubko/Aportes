@@ -341,6 +341,7 @@ TABLE_NAME_4="t_estado_user"
 NUM_COLS=26 # Number of expected columns to read from csv file
 
 genera_banner	"SQL_OUT_FILE"											#---->
+
 genera_banner	"ERROR_LOG"												#---->
 
 PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"

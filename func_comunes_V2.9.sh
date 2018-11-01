@@ -51,9 +51,9 @@ fi
 
 case ${BANNER} in 
 SQL_OUT_FILE )
-	if [  -d "${SQL_OUT_FILE}" ]
+	if [ !  -d "${SQL_OUT_FILE%/*}" ]
 	then
-	  echo "${NOM_ABREV}: No se puede generar: ${SQL_OUT_FILE} Es un directorio"
+	  echo "${NOM_ABREV}: No se puede generar: ${SQL_OUT_FILE} No existe el directorio"
 	  exit
 	fi
 
@@ -68,7 +68,7 @@ SQL_OUT_FILE )
 ;;
 #------------------------------------------------------------------------------
 ERROR_LOG )
-	${0%/*}
+	
 	if [ ! -d "${ERROR_LOG%/*}" ]
 	then
 	  echo "${NOM_ABREV}: No se puede generar: ${ERROR_LOG} No existe el directorio"
@@ -85,9 +85,10 @@ ERROR_LOG )
 ;;
 #------------------------------------------------------------------------------
 PRELIM_OUT_FILE )
-	if [  -d "${PRELIM_OUT_FILE}" ]
+
+	if [ ! -d "${PRELIM_OUT_FILE%/*}" ]
 	then
-	  echo "${NOM_ABREV}: No se puede generar: ${PRELIM_OUT_FILE} Es un directorio"
+	  echo "${NOM_ABREV}: No se puede generar: ${PRELIM_OUT_FILE} No existe el directorio"
 	  exit
 	fi
 
