@@ -3,117 +3,21 @@
 # Formatear datos
 #-------------------------------------------------------------------------------
 # Version:
-
-linea_guiones ()
-{
-echo "-- --------------------------------------------------------------"  
-}
-
-
-run_data()
-{	
-#-------------------------------------------------------------------------------
-# RUN_DATE Fecha y hora de la ejecucion del script
-RUN_DATE="$(date  +\#\ %Y\/%m\/%d\ %H:%M)"
-RUN_DATE_FILE="$(date  +%Y-%m-%d_%H%M)"    # Nuevo formato para usar en nombres de Archivo
-#-------------------------------------------------------------------------------
-# Nombre abreviado del script en ejecucion... para que los mensajes sean mas legibles.
-
-VERS=${0##*_} 		# Elimina /abc/def/ghi/./Gen_list_files_cel_NO_copiar_  Queda "V0.5.sh"
-VERS=${VERS%.*} 	# Elimina ".sh"  Queda "V0.5"
-
-COM=${0%_*}    				#; echo $COM   # ELimina "_V0.5.sh"
-COM=${COM##*/} 				#; echo $COM   # Elimina "/abc/def/ghi/./"
-COMANDO_COMPLETO=${COM}   	# Para determinar que secciones ejecutar en Verifica.. y Genera
-COM=${COM:0:4} 				#; echo $COM   # Solo los primeros 4 caracteres
-
-NOM_ABREV=${COM}'..'${VERS}
-return
-}
-#-------------------------------------------------------------------------------
-
-genera_banner ()
-{	
-# Aca viene el banner y la lista de variables a incluir
-DIR_REF=${PWD}
-
-FLAG_TERM="FALSE"           # Si algun parametro no esta definido terminar temprano
-
-if [ ! -f  "${CSV_IN_FILE}" ]
-then
-	echo "El Archivo ${CSV_IN_FILE} NO existe"
-	exit
-fi
-
-if [  -d "${SQL_OUT_FILE}" ]
-then
-  echo "${NOM_ABREV}: No se puede generar: ${SQL_OUT_FILE} Es un directorio"
-  exit
-fi
-
-
-  linea_guiones 										>${SQL_OUT_FILE}
-  echo "-- Nombre    :  ${SQL_OUT_FILE}"				>>${SQL_OUT_FILE}
-  echo "-- Creado por: $0     Run_date  : ${RUN_DATE}"	>>${SQL_OUT_FILE}
-  printf "%s\n" "--"									>>${SQL_OUT_FILE}
-  echo "-- Directorio Origen:  ${PWD}" 					>>${SQL_OUT_FILE}
-  echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${SQL_OUT_FILE}
-  linea_guiones 										>>${SQL_OUT_FILE}
-# echo "-- Variables incluidas:"			  	        >>${SQL_OUT_FILE}	
-
 #------------------------------------------------------------------------------
 
-if [  -d "${ERROR_LOG}" ]
+INSTALL_DIR=${0%/*}
+
+if [ ! -d  ${INSTALL_DIR} ]
 then
-  echo "${NOM_ABREV}: No se puede generar: ${ERROR_LOG} Es un directorio"
-  exit
+   echo ${INSTALL_DIR} " No es un directorio"
+   echo "Invocar comando con ./${0}"
+   exit
 fi
 
+source ${INSTALL_DIR}/func_comunes_V2.0
 
-  linea_guiones 										>${ERROR_LOG}
-  echo "-- Nombre    :  ${ERROR_LOG}"					>>${ERROR_LOG}
-  echo "-- Creado por: $0     Run_date  : ${RUN_DATE}"	>>${ERROR_LOG}
-  printf "%s\n" "--"									>>${ERROR_LOG}
-  echo "-- Directorio Origen:  ${PWD}" 					>>${ERROR_LOG}
-  echo "-- CSV_IN_FILE :				${CSV_IN_FILE}"	>>${ERROR_LOG}
-  linea_guiones 										>>${ERROR_LOG}
 
-  
-  
-  
-return	
-}
 
-validate_line()
-{
-	
-if [ ${#VAL_COL[@]}  -ne ${NUM_COLS}     ]
-then
-	LINE_IS_VALID="FALSE"
-	if [ ${#VAL_COL[@]} -le ${NUM_COLS}    ]
-	then
-		echo "Hay un c/r en la linea" "${VAL_COL[0]}" "${VAL_COL[1]}"
-#		echo "Error   -->" ${VAL_COL[@]}
-	else
-		if [ ${#VAL_COL[@]} -gt ${NUM_COLS}  ]  # Este if se podria omitir...
-		then
-			echo "Hay DEMASIADAS comas en la linea" "${VAL_COL[0]}" "${VAL_COL[1]}"
-#			echo "Error   -->" ${VAL_COL[@]}
-		fi
-	fi
-else
-    NUM_COL=0  						# Indice para recorrer las columnas
-									# Eliminando caracteres espureos
-	while [ ${NUM_COL} -le ${NUM_COLS} ]
-	do
-	  VAL_COL[${NUM_COL}]=${VAL_COL[${NUM_COL}]//\'/ }
-	  let NUM_COL++
-	done
-    
-	LINE_IS_VALID="TRUE"
-fi	
-return
-	}
 
 #------------------------------------------------------------------------------
 procesar_dni_cuil()
@@ -404,7 +308,7 @@ declare -a LISTA_COLUMNAS_4=(30 2)			# DNI ESTADO f_act_estado
 
 declare -a ESTADO_EN_PLANILLA ESTADO_EN_TABLA	# Equivalencia de un nombre a otro
 
-run_data														#---->
+run_data																#---->
 
 DNI_NO_DISPONIBLE=""
 CUIL_NO_DISPONIBLE="N/D"
@@ -428,10 +332,12 @@ TABLE_NAME_4="t_estado_user"
 
 NUM_COLS=26 # Number of expected columns to read from csv file
 
-genera_banner													#---->
+genera_banner	"SQL_OUT_FILE"											#---->
+genera_banner	"ERROR_LOG"												#---->
 
 PATRON_CUIL="^ *[0-9]\{2\}\-[0-9]\{8\}\-[0-9]\{1\}"
 
+#-------------------------------------------------------------------------------
 # 'Asignado','Disponible','ND_Temp','De_Baja','Con_Restricc','Interno','Puntual','Desconoc')
 # Estado en										Estado en
 # Planilla 										Tabla
@@ -445,7 +351,7 @@ ESTADO_EN_PLANILLA[5]="Con Restricciones"	; ESTADO_EN_TABLA[5]="Con_Restricc"	#(
 ESTADO_EN_PLANILLA[6]="Puntual"				; ESTADO_EN_TABLA[6]="Puntual"		#(*) No sabemos si es correcto
 ESTADO_EN_PLANILLA[7]="Desconocido"			; ESTADO_EN_TABLA[7]="Desconoc"	
 
-
+#-------------------------------------------------------------------------------
 # NOMBRE_COL	Nombre Col			   COL	Nombre Excel
 #		[Indice]
 NOMBRE_COL[0]="apellido"			#	A	Apellido
@@ -485,13 +391,14 @@ NOMBRE_COL[34]="f_act_estado"
 # Columnas auxiliares para recibir datos parseados
 NOMBRE_COL[100]="especialidad"
 
-
+#-------------------------------------------------------------------------------
 # Por ahora cargamos una sola vez la fecha de actualizacion...
 
 FECHA_ACTUALIZ="$(date  +\%Y-%m-%d\ %H:%M:%S)"  # Fecha de actualizacion 
 
 # echo ${NOMBRE_COL[0]} ${NOMBRE_COL[1]} ${NOMBRE_COL[2]} ${NOMBRE_COL[3]}
 
+#-------------------------------------------------------------------------------
 
 OLDIFS=$IFS
 IFS=,
@@ -505,37 +412,37 @@ do
 		continue
 	fi
 	
-	procesar_dni_cuil								#---->
+	procesar_dni_cuil													#---->
 	
 	VAL_COL[34]=${FECHA_ACTUALIZ}
 	
 	if [ ${HAY_DNI} = "TRUE" ]
 	then
  
-        # procesar_telefono							#---->
+        # procesar_telefono												#---->
 
-        procesar_email								#---->
+        procesar_email													#---->
  # Tabla T_VOLS1       
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_1[@]}")
-        generar_insert ${TABLE_NAME_1}	>>${SQL_OUT_FILE}			#---->
+        generar_insert ${TABLE_NAME_1}	>>${SQL_OUT_FILE}				#---->
         
  # Tabla T_VOLS2       
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_2[@]}")
-        generar_insert ${TABLE_NAME_2}	>>${SQL_OUT_FILE}			#---->
+        generar_insert ${TABLE_NAME_2}	>>${SQL_OUT_FILE}				#---->
         
 # Tabla T_ESPECIALIDAD_VOLS	
         unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_3[@]}")
-		procesar_especialidad						#---->
+		procesar_especialidad											#---->
 		
 		
 # Tabla T_ESTADO_VOLS
-		estandarizar_estado							#---->
+		estandarizar_estado												#---->
 		unset LISTA_COLUMNAS
         LISTA_COLUMNAS=("${LISTA_COLUMNAS_4[@]}")
-        generar_insert ${TABLE_NAME_4}  	>>${SQL_OUT_FILE}		#---->
+        generar_insert ${TABLE_NAME_4}  	>>${SQL_OUT_FILE}			#---->
 		
 		linea_guiones >>${SQL_OUT_FILE}											
 	else
