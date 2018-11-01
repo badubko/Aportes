@@ -18,7 +18,6 @@ fi
 if [ ! -f  ${INSTALL_DIR}/${FUNC_COM} ]
 then
    echo ${INSTALL_DIR}/${FUNC_COM} " No existe!"
-
    exit
 fi
 

@@ -11,11 +11,11 @@ echo "-- --------------------------------------------------------------"
 #-------------------------------------------------------------------------------
 run_data()
 #-------------------------------------------------------------------------------
+{
 # RUN_DATE Fecha y hora de la ejecucion del script
 RUN_DATE="$(date  +\#\ %Y\/%m\/%d\ %H:%M)"
 RUN_DATE_FILE="$(date  +%Y-%m-%d_%H%M)"    # Nuevo formato para usar en nombres de Archivo
-#-------------------------------------------------------------------------------
-{
+
 VERS=${0##*_} 		# Elimina /abc/def/ghi/./Gen_list_files_cel_NO_copiar_  Queda "V0.5.sh"
 VERS=${VERS%.*} 	# Elimina ".sh"  Queda "V0.5"
 
