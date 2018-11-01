@@ -71,6 +71,9 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
-\. ../SQL_Ins_T_fijas/2018-10-31_0018_ESPEC.sql
--- \. ../SQL_Ins_T_fijas/2018-10-31_1029_ESTADO.sql
+\. SQL_Ins_T_fijas/2018-10-31_0018_ESPEC.sql
+
+-- No hace falta insertar esto para esta version de la BD
+-- Ya que esta en t_estado_user
+-- \. SQL_Ins_T_fijas/2018-10-31_1029_ESTADO.sql
 
